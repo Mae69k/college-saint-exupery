@@ -11,91 +11,91 @@
 <script src="protect.js"></script>
 
 <div class="topbar">
-  <div class="topbar-inner">
-    <img src="assets/favicon.png" alt="Collège Saint-Exupéry">
-    <div class="topbar-text">
-      <div class="etab">Collège Saint-Exupéry</div>
-      <div class="sub">Établissement de rôleplay Discord</div>
-    </div>
-  </div>
+ <div class="topbar-inner">
+ <img src="assets/favicon.png" alt="Collège Saint-Exupéry">
+ <div class="topbar-text">
+ <div class="etab">Collège Saint-Exupéry</div>
+ <div class="sub">Établissement de Discord</div>
+ </div>
+ </div>
 </div>
 
 <div class="hero">
-  <img class="big-logo" src="assets/logo.png" alt="Logo Collège Saint-Exupéry">
-  <div class="hero-copy">
-    <h1>Candidature de recrutement</h1>
-    <p>Tu veux rejoindre le personnel du Collège Saint-Exupéry (AED, professeur, personnel médical...) ? Remplis ce formulaire.</p>
-  </div>
+ <img class="big-logo" src="assets/logo.png" alt="Logo Collège Saint-Exupéry">
+ <div class="hero-copy">
+ <h1>Candidature de recrutement</h1>
+ <p>Tu veux rejoindre le personnel du Collège Saint-Exupéry (AED, professeur, personnel médical...) ? Remplis ce formulaire.</p>
+ </div>
 </div>
 
 <div class="wrap">
-  <a href="index.html" class="back-link">← Retour à l'accueil</a>
-  <div class="card">
-    <form id="form-recrutement">
-      <div class="duo">
-        <div class="field">
-          <label for="nom">Nom</label>
-          <input type="text" id="nom" required>
-        </div>
-        <div class="field">
-          <label for="prenom">Prénom</label>
-          <input type="text" id="prenom" required>
-        </div>
-      </div>
+ <a href="index.html" class="back-link">← Retour à l'accueil</a>
+ <div class="card">
+ <form id="form-recrutement">
+ <div class="duo">
+ <div class="field">
+ <label for="nom">Nom</label>
+ <input type="text" id="nom" required>
+ </div>
+ <div class="field">
+ <label for="prenom">Prénom</label>
+ <input type="text" id="prenom" required>
+ </div>
+ </div>
 
-      <div class="field">
-        <label for="discord">Nom d'utilisateur Discord</label>
-        <input type="text" id="discord" placeholder="pseudo (pas le pseudo affiché sur le serveur)" required>
-      </div>
+ <div class="field">
+ <label for="discord">Nom d'utilisateur Discord</label>
+ <input type="text" id="discord" placeholder="pseudo (pas le pseudo affiché sur le serveur)" required>
+ </div>
 
-      <div class="field">
-        <label for="role">Rôle demandé</label>
-        <input type="text" id="role" placeholder="ex : AED, Professeur de Mathématiques, Infirmière..." required>
-        <span class="hint">Pense à vérifier les places disponibles dans le salon effectif avant de postuler : <a href="https://discord.com/channels/1548328587168587837/1548664956906504313" target="_blank" rel="noopener">voir les effectifs</a></span>
-      </div>
+ <div class="field">
+ <label for="role">Rôle demandé</label>
+ <input type="text" id="role" placeholder="ex : AED, Professeur de Mathématiques, Infirmière..." required>
+ <span class="hint">Pense à vérifier les places disponibles dans le salon effectif avant de postuler : <a href="https://discord.com/channels/1548328587168587837/1548664956906504313" target="_blank" rel="noopener">voir les effectifs</a></span>
+ </div>
 
-      <div class="field">
-        <label for="age">Âge (RP)</label>
-        <input type="number" id="age" min="18" max="70" required>
-      </div>
+ <div class="field">
+ <label for="age">Âge ()</label>
+ <input type="number" id="age" min="18" max="70" required>
+ </div>
 
-      <div class="field">
-        <label for="motivations">Motivations</label>
-        <textarea id="motivations" required placeholder="Pourquoi veux-tu occuper ce poste ?"></textarea>
-      </div>
+ <div class="field">
+ <label for="motivations">Motivations</label>
+ <textarea id="motivations" required placeholder="Pourquoi veux-tu occuper ce poste ?"></textarea>
+ </div>
 
-      <div class="field">
-        <label>3 qualités</label>
-        <div class="trio">
-          <input type="text" id="qualite1" placeholder="Qualité 1" required>
-          <input type="text" id="qualite2" placeholder="Qualité 2" required>
-          <input type="text" id="qualite3" placeholder="Qualité 3" required>
-        </div>
-      </div>
+ <div class="field">
+ <label>3 qualités</label>
+ <div class="trio">
+ <input type="text" id="qualite1" placeholder="Qualité 1" required>
+ <input type="text" id="qualite2" placeholder="Qualité 2" required>
+ <input type="text" id="qualite3" placeholder="Qualité 3" required>
+ </div>
+ </div>
 
-      <div class="field">
-        <label>3 défauts</label>
-        <div class="trio">
-          <input type="text" id="defaut1" placeholder="Défaut 1" required>
-          <input type="text" id="defaut2" placeholder="Défaut 2" required>
-          <input type="text" id="defaut3" placeholder="Défaut 3" required>
-        </div>
-      </div>
+ <div class="field">
+ <label>3 défauts</label>
+ <div class="trio">
+ <input type="text" id="defaut1" placeholder="Défaut 1" required>
+ <input type="text" id="defaut2" placeholder="Défaut 2" required>
+ <input type="text" id="defaut3" placeholder="Défaut 3" required>
+ </div>
+ </div>
 
-      <div class="field">
-        <label>Disponibilité pour un recrutement à l'oral</label>
-        <div class="radio-row">
-          <label><input type="radio" name="dispo" value="oui" required> Oui</label>
-          <label><input type="radio" name="dispo" value="non" required> Non</label>
-          <label><input type="radio" name="dispo" value="selon" required> Selon les créneaux</label>
-        </div>
-      </div>
+ <div class="field">
+ <label>Disponibilité pour un recrutement à l'oral</label>
+ <div class="radio-row">
+ <label><input type="radio" name="dispo" value="oui" required> Oui</label>
+ <label><input type="radio" name="dispo" value="non" required> Non</label>
+ <label><input type="radio" name="dispo" value="selon" required> Selon les créneaux</label>
+ </div>
+ </div>
 
-      <button type="submit" class="submit" id="btn-submit">Envoyer ma candidature</button>
-      <div class="msg ok" id="msg-ok">✓ Ta candidature a bien été envoyée. L'équipe de direction va l'examiner.</div>
-      <div class="msg err" id="msg-err">Une erreur est survenue. Vérifie ta connexion et réessaie.</div>
-    </form>
-  </div>
+ <button type="submit" class="submit" id="btn-submit">Envoyer ma candidature</button>
+ <div class="msg ok" id="msg-ok">✓ Ta candidature a bien été envoyée. L'équipe de direction va l'examiner.</div>
+ <div class="msg err" id="msg-err">Une erreur est survenue. Vérifie ta connexion et réessaie.</div>
+ </form>
+ </div>
 </div>
 
 <footer class="site-footer">Collège Saint-Exupéry — Formulaire de recrutement</footer>
@@ -109,44 +109,44 @@ const msgOk = document.getElementById('msg-ok');
 const msgErr = document.getElementById('msg-err');
 
 form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  msgOk.style.display = 'none';
-  msgErr.style.display = 'none';
-  btn.disabled = true;
-  btn.textContent = 'Envoi en cours...';
+ e.preventDefault();
+ msgOk.style.display = 'none';
+ msgErr.style.display = 'none';
+ btn.disabled = true;
+ btn.textContent = 'Envoi en cours...';
 
-  const payload = {
-    nom: document.getElementById('nom').value.trim(),
-    prenom: document.getElementById('prenom').value.trim(),
-    discord_username: document.getElementById('discord').value.trim(),
-    role_demande: document.getElementById('role').value.trim(),
-    age_rp: parseInt(document.getElementById('age').value, 10),
-    motivations: document.getElementById('motivations').value.trim(),
-    qualites: [
-      document.getElementById('qualite1').value.trim(),
-      document.getElementById('qualite2').value.trim(),
-      document.getElementById('qualite3').value.trim()
-    ],
-    defauts: [
-      document.getElementById('defaut1').value.trim(),
-      document.getElementById('defaut2').value.trim(),
-      document.getElementById('defaut3').value.trim()
-    ],
-    disponibilite_oral: document.querySelector('input[name=dispo]:checked').value
-  };
+ const payload = {
+ nom: document.getElementById('nom').value.trim(),
+ prenom: document.getElementById('prenom').value.trim(),
+ discord_username: document.getElementById('discord').value.trim(),
+ role_demande: document.getElementById('role').value.trim(),
+ age_rp: parseInt(document.getElementById('age').value, 10),
+ motivations: document.getElementById('motivations').value.trim(),
+ qualites: [
+ document.getElementById('qualite1').value.trim(),
+ document.getElementById('qualite2').value.trim(),
+ document.getElementById('qualite3').value.trim()
+ ],
+ defauts: [
+ document.getElementById('defaut1').value.trim(),
+ document.getElementById('defaut2').value.trim(),
+ document.getElementById('defaut3').value.trim()
+ ],
+ disponibilite_oral: document.querySelector('input[name=dispo]:checked').value
+ };
 
-  const { error } = await supabaseClient.from('recrutements').insert(payload);
+ const { error } = await supabaseClient.from('recrutements').insert(payload);
 
-  btn.disabled = false;
-  btn.textContent = 'Envoyer ma candidature';
+ btn.disabled = false;
+ btn.textContent = 'Envoyer ma candidature';
 
-  if (error) {
-    console.error(error);
-    msgErr.style.display = 'block';
-  } else {
-    msgOk.style.display = 'block';
-    form.reset();
-  }
+ if (error) {
+ console.error(error);
+ msgErr.style.display = 'block';
+ } else {
+ msgOk.style.display = 'block';
+ form.reset();
+ }
 });
 </script>
 

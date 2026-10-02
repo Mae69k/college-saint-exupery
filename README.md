@@ -28,8 +28,8 @@ C'est pour ça qu'on crée ton compte directement dans Supabase, pas dans le cod
 1. Va dans **Project Settings → API**.
 2. Copie **Project URL** et **anon public key**.
 3. Ouvre `config.js` et remplace :
-   - `SUPABASE_URL` par ton Project URL
-   - `SUPABASE_ANON_KEY` par ta clé anon public
+  - `SUPABASE_URL` par ton Project URL
+  - `SUPABASE_ANON_KEY` par ta clé anon public
 
 Ces deux valeurs ne sont pas secrètes, elles sont faites pour être dans le code du site.
 
@@ -40,8 +40,8 @@ Ces deux valeurs ne sont pas secrètes, elles sont faites pour être dans le cod
 3. Mot de passe : celui de ton choix
 4. Coche **Auto Confirm User**, puis crée le compte.
 5. Retourne dans **SQL Editor** et exécute cette requête pour te donner le rôle superadmin
-   (remplace `UUID_ICI` par l'UID affiché sur la fiche du user, visible dans Authentication → Users —
-   **sans les chevrons `< >`**, juste l'UUID brut) :
+  (remplace `UUID_ICI` par l'UID affiché sur la fiche du user, visible dans Authentication → Users —
+  **sans les chevrons `< >`**, juste l'UUID brut) :
 
 ```sql
 insert into profiles (id, username, role)
@@ -73,9 +73,9 @@ Si ton site tournait déjà avant cette fonctionnalité, va dans **SQL Editor** 
 
 1. Exécute `migration-2-notes-personnel.sql` dans **SQL Editor** (ajoute les notes internes + le droit pour un superadmin de changer le rôle d'un compte).
 2. Déploie une nouvelle fonction, exactement comme pour `create-staff-user` (voir étape 5 plus haut) :
-   - Crée le dossier `supabase/functions/delete-staff-user/`
-   - Mets-y le fichier `edge-function-delete-staff-user.ts` fourni, renommé en `index.ts`
-   - Déploie : `supabase functions deploy delete-staff-user`
+  - Crée le dossier `supabase/functions/delete-staff-user/`
+  - Mets-y le fichier `edge-function-delete-staff-user.ts` fourni, renommé en `index.ts`
+  - Déploie : `supabase functions deploy delete-staff-user`
 
 ---
 
@@ -152,11 +152,11 @@ site/
 ├── recrutement.html
 ├── admin.html
 ├── style.css
-├── config.js                          ← à compléter (étape 3)
-├── schema.sql                         ← à exécuter dans Supabase (étape 2)
+├── config.js             ← à compléter (étape 3)
+├── schema.sql             ← à exécuter dans Supabase (étape 2)
 ├── edge-function-create-staff-user.ts ← à déployer (étape 5)
 └── assets/
-    ├── favicon.png
-    └── logo.png
+  ├── favicon.png
+  └── logo.png
 ```
 "# sitecse" 
