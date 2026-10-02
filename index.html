@@ -659,17 +659,24 @@ document.addEventListener('DOMContentLoaded', async () => {
   
 
 
+    let hideTimeout;
     accountMenu.addEventListener('mouseenter', () => {
-      accountDropdown.style.display = 'block';
-    });
-    accountDropdown.addEventListener('mouseenter', () => {
+      clearTimeout(hideTimeout);
       accountDropdown.style.display = 'block';
     });
     accountMenu.addEventListener('mouseleave', () => {
-      accountDropdown.style.display = 'none';
+      hideTimeout = setTimeout(() => {
+        accountDropdown.style.display = 'none';
+      }, 50);
+    });
+    accountDropdown.addEventListener('mouseenter', () => {
+      clearTimeout(hideTimeout);
+      accountDropdown.style.display = 'block';
     });
     accountDropdown.addEventListener('mouseleave', () => {
-      accountDropdown.style.display = 'none';
+      hideTimeout = setTimeout(() => {
+        accountDropdown.style.display = 'none';
+      }, 50);
     });
   
 
