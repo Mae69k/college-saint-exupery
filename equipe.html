@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html lang='fr'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>Équipe - Collège Saint-Exupéry</title>
+<link rel='icon' type='image/png' href='assets/favicon.png'>
+<link rel='stylesheet' href='style.css'>
+</head>
+<body>
+<script src='protect.js'></script>
+<div class='topbar'>
+  <div class='topbar-inner'>
+    <img src='assets/favicon.png' alt='Collège Saint-Exupéry'>
+    <div class='topbar-text'>
+      <div class='etab'>Collège Saint-Exupéry</div>
+      <div class='sub'>Équipe du collège</div>
+    </div>
+  </div>
+</div>
+<div class='wrap' style='padding-top:32px; max-width:920px;'>
+  <a href='index.html' class='back-link'>← Retour à l'accueil</a>
+  <h1 style='font-family:Arial, sans-serif; color:var(--navy-dark); margin:14px 0 8px;'>Équipe du collège</h1>
+  <p style='color:var(--ink-soft); margin-bottom:28px;'>* Les informations ci-dessous sont des données d'exemple uniquement. Aucune information réelle n'est représentée.</p>
+  <div id='equipe-content'></div>
+</div>
+<script>
+const equipes = [
+  {categorie:'Direction', membres:[
+    {nom:'[Exemple]', prenom:'[Prénom]', fonction:'Principal(e)', service:'Direction', presentation:'[Exemple - Présentation à titre indicatif uniquement.]'},
+    {nom:'[Exemple]', prenom:'[Prénom]', fonction:'Principal(e)-adjoint(e)', service:'Direction adjointe', presentation:'[Exemple - Données à titre d exemple.]'}
+  ]},
+  {categorie:'Vie scolaire', membres:[
+    {nom:'[Exemple]', prenom:'[Prénom]', fonction:'CPE', service:'Vie scolaire', presentation:'[Exemple - Données à titre d exemple.]'}
+  ]},
+  {categorie:'Enseignants', membres:[
+    {nom:'[Exemple]', prenom:'[Prénom]', fonction:'Professeur(e)', service:'[Exemple - Matière]', presentation:'[Exemple - Données à titre d exemple.]'}
+  ]},
+  {categorie:'Administration', membres:[
+    {nom:'[Exemple]', prenom:'[Prénom]', fonction:'Agent administratif(ve)', service:'Administration', presentation:'[Exemple - Données à titre d exemple.]'}
+  ]},
+  {categorie:'Personnel médico-social', membres:[
+    {nom:'[Exemple]', prenom:'[Prénom]', fonction:'[Exemple - Fonction]', service:'Personnel médico-social', presentation:'[Exemple - Données à titre d exemple.]'}
+  ]},
+  {categorie:'Autres personnels', membres:[
+    {nom:'[Exemple]', prenom:'[Prénom]', fonction:'[Exemple - Fonction]', service:'Autre', presentation:'[Exemple - Données à titre d exemple.]'}
+  ]}
+];
+const container = document.getElementById('equipe-content');
+container.innerHTML = equipes.map(cat => {
+  return '<div class=\"card\" style=\"margin-bottom:24px;\"><h3 style=\"margin:0 0 18px; font-family:Arial,sans-serif; color:var(--navy-dark);\">' + cat.categorie + '</h3><div style=\"display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:16px;\">' + cat.membres.map(m => {
+    return '<div style=\"background:#f8fbff; border:1px solid var(--line); border-radius:10px; padding:18px;\"><div style=\"font-weight:600; color:var(--navy-dark); margin-bottom:4px;\">' + m.prenom + ' ' + m.nom + '</div><div style=\"font-size:.9rem; color:var(--ink); margin-bottom:4px;\">' + m.fonction + '</div><div style=\"font-size:.88rem; color:var(--ink-soft); margin-bottom:10px;\">' + m.service + '</div><p style=\"color:var(--ink-soft); font-size:.92rem; line-height:1.6; margin:0;\">' + m.presentation + '</p></div>';
+  }).join('') + '</div></div>';
+}).join('');
+</script>
+</body>
+</html>

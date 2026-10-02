@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html lang='fr'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>Actualités - Collège Saint-Exupéry</title>
+<link rel='icon' type='image/png' href='assets/favicon.png'>
+<link rel='stylesheet' href='style.css'>
+</head>
+<body>
+<script src='protect.js'></script>
+<div class='topbar'>
+  <div class='topbar-inner'>
+    <img src='assets/favicon.png' alt='Collège Saint-Exupéry'>
+    <div class='topbar-text'>
+      <div class='etab'>Collège Saint-Exupéry</div>
+      <div class='sub'>Actualités</div>
+    </div>
+  </div>
+</div>
+<div class='wrap' style='padding-top:32px; max-width:820px;'>
+  <a href='index.html' class='back-link'>← Retour à l'accueil</a>
+  <h1 style='font-family:Arial, sans-serif; color:var(--navy-dark); margin:14px 0 24px;'>Actualités du collège</h1>
+  <div id='actus-toutes' style='display:flex; flex-direction:column; gap:20px;'></div>
+</div>
+<script>
+const actualites = [
+  {date:'[Exemple : 01/10/2026]', titre:'[Exemple - Rentrée scolaire]', description:'[Exemple - Informations relatives à la rentrée. Données à titre d exemple uniquement.]'},
+  {date:'[Exemple : 15/10/2026]', titre:'[Exemple - Sortie pédagogique]', description:'[Exemple - Annonce à titre indicatif. Données à titre d exemple uniquement.]'},
+  {date:'[Exemple : 05/11/2026]', titre:'[Exemple - Activité du collège]', description:'[Exemple - Actualité d exemple, modifiable dans le code.]'}
+];
+document.getElementById('actus-toutes').innerHTML = actualites.map(a=>
+  <div class='card'>
+    <div style='font-size:.85rem; color:var(--ink-soft); margin-bottom:8px;'></div>
+    <h3 style='margin:0 0 10px; font-family:Arial,sans-serif; color:var(--navy-dark);'></h3>
+    <p style='color:var(--ink-soft); line-height:1.6; margin:0 0 16px;'></p>
+    <button class='submit' style='width:auto; padding:10px 18px;' onclick="alert('Service prochainement disponible.');">Lire la suite</button>
+  </div>
+).join('');
+</script>
+</body>
+</html>
