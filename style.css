@@ -19,7 +19,7 @@ html,body{margin:0;padding:0;}
 body{
   background:var(--paper);
   color:var(--ink);
-  font-family:'Inter',sans-serif;
+  font-family:Arial,sans-serif;
   min-height:100vh;
   -webkit-font-smoothing:antialiased;
 }
@@ -50,7 +50,7 @@ body{
 }
 .topbar-inner img{height:40px;width:auto;}
 .topbar-text{color:#fff;}
-.topbar-text .etab{font-family:'Fraunces',serif;font-weight:600;font-size:1.05rem;line-height:1.2;}
+.topbar-text .etab{font-family:Arial,serif;font-weight:600;font-size:1.05rem;line-height:1.2;}
 .topbar-text .sub{font-size:.78rem;color:#cfe0f0;letter-spacing:.02em;}
 
 .hero{
@@ -67,7 +67,7 @@ body{
   flex-shrink:0;
 }
 .hero-copy h1{
-  font-family:'Fraunces',serif;
+  font-family:Arial,serif;
   font-weight:600;
   font-size:2rem;
   line-height:1.15;
@@ -115,7 +115,7 @@ body{
 
 input[type=text],input[type=number],input[type=password],textarea,select{
   width:100%;
-  font-family:'Inter',sans-serif;
+  font-family:Arial,sans-serif;
   font-size:.95rem;
   padding:11px 13px;
   border:1px solid var(--line);
@@ -129,7 +129,7 @@ input:focus,textarea:focus,select:focus{
   border-color:var(--sky);
   background:#fff;
 }
-textarea{resize:vertical;min-height:90px;font-family:'Inter',sans-serif;}
+textarea{resize:vertical;min-height:90px;font-family:Arial,sans-serif;}
 
 .trio{
   display:grid;
@@ -180,7 +180,7 @@ button.submit{
   padding:14px 20px;
   font-size:.98rem;
   font-weight:600;
-  font-family:'Inter',sans-serif;
+  font-family:Arial,sans-serif;
   border-radius:7px;
   cursor:pointer;
   transition:background .15s;
@@ -214,7 +214,7 @@ footer.site-footer{
 }
 .login-shell .card{text-align:center;}
 .login-shell img{width:64px;margin-bottom:14px;}
-.login-shell h1{font-family:'Fraunces',serif;font-size:1.3rem;margin:0 0 22px;color:var(--navy-dark);}
+.login-shell h1{font-family:Arial,serif;font-size:1.3rem;margin:0 0 22px;color:var(--navy-dark);}
 .login-shell .field label{text-align:left;}
 
 .admin-shell{max-width:1080px;margin:0 auto;padding:32px 24px 64px;}
@@ -226,18 +226,18 @@ footer.site-footer{
   flex-wrap:wrap;
   gap:12px;
 }
-.admin-head h1{font-family:'Fraunces',serif;font-size:1.4rem;margin:0;color:var(--navy-dark);}
+.admin-head h1{font-family:Arial,serif;font-size:1.4rem;margin:0;color:var(--navy-dark);}
 .who{font-size:.85rem;color:var(--ink-soft);}
 .logout-btn{
   background:none;border:1px solid var(--line);padding:8px 14px;border-radius:7px;
-  cursor:pointer;font-size:.82rem;color:var(--ink-soft);font-family:'Inter',sans-serif;
+  cursor:pointer;font-size:.82rem;color:var(--ink-soft);font-family:Arial,sans-serif;
 }
 .logout-btn:hover{border-color:var(--error);color:var(--error);}
 
 .tabs{display:flex;gap:6px;margin-bottom:20px;border-bottom:1px solid var(--line);}
 .tab-btn{
   background:none;border:none;padding:11px 18px;font-size:.9rem;font-weight:600;
-  color:var(--ink-soft);cursor:pointer;border-bottom:2px solid transparent;font-family:'Inter',sans-serif;
+  color:var(--ink-soft);cursor:pointer;border-bottom:2px solid transparent;font-family:Arial,sans-serif;
 }
 .tab-btn.active{color:var(--navy);border-bottom-color:var(--gold);}
 .tab-panel{display:none;}
@@ -252,7 +252,7 @@ footer.site-footer{
 .search-input{
   flex:1;
   min-width:220px;
-  font-family:'Inter',sans-serif;
+  font-family:Arial,sans-serif;
   font-size:.88rem;
   padding:10px 13px;
   border:1px solid var(--line);
@@ -261,7 +261,7 @@ footer.site-footer{
 }
 .search-input:focus{outline:none;border-color:var(--sky);background:#fff;}
 .filter-select{
-  font-family:'Inter',sans-serif;
+  font-family:Arial,sans-serif;
   font-size:.85rem;
   padding:10px 12px;
   border:1px solid var(--line);
@@ -283,7 +283,7 @@ footer.site-footer{
   border-top:1px solid var(--line);
 }
 .action-btn{
-  font-family:'Inter',sans-serif;
+  font-family:Arial,sans-serif;
   font-size:.8rem;
   font-weight:600;
   padding:7px 13px;
@@ -310,7 +310,7 @@ footer.site-footer{
 .note-input{
   width:100%;
   min-height:56px;
-  font-family:'Inter',sans-serif;
+  font-family:Arial,sans-serif;
   font-size:.85rem;
   padding:9px 11px;
   border:1px solid var(--line);
