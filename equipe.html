@@ -47,9 +47,12 @@ const equipes = [
   ]}
 ];
 const container = document.getElementById('equipe-content');
+function esc(str) {
+  return String(str ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+}
 container.innerHTML = equipes.map(cat => {
-  return '<div class=\"card\" style=\"margin-bottom:24px;\"><h3 style=\"margin:0 0 18px; font-family:Arial,sans-serif; color:var(--navy-dark);\">' + cat.categorie + '</h3><div style=\"display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:16px;\">' + cat.membres.map(m => {
-    return '<div style=\"background:#f8fbff; border:1px solid var(--line); border-radius:10px; padding:18px;\"><div style=\"font-weight:600; color:var(--navy-dark); margin-bottom:4px;\">' + m.prenom + ' ' + m.nom + '</div><div style=\"font-size:.9rem; color:var(--ink); margin-bottom:4px;\">' + m.fonction + '</div><div style=\"font-size:.88rem; color:var(--ink-soft); margin-bottom:10px;\">' + m.service + '</div><p style=\"color:var(--ink-soft); font-size:.92rem; line-height:1.6; margin:0;\">' + m.presentation + '</p></div>';
+  return '<div class="card" style="margin-bottom:24px;"><h3 style="margin:0 0 18px; font-family:Arial,sans-serif; color:var(--navy-dark);">' + esc(cat.categorie) + '</h3><div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:16px;">' + cat.membres.map(m => {
+    return '<div style="background:#f8fbff; border:1px solid var(--line); border-radius:10px; padding:18px;"><div style="font-weight:600; color:var(--navy-dark); margin-bottom:4px;">' + esc(m.prenom) + ' ' + esc(m.nom) + '</div><div style="font-size:.9rem; color:var(--ink); margin-bottom:4px;">' + esc(m.fonction) + '</div><div style="font-size:.88rem; color:var(--ink-soft); margin-bottom:10px;">' + esc(m.service) + '</div><p style="color:var(--ink-soft); font-size:.92rem; line-height:1.6; margin:0;">' + esc(m.presentation) + '</p></div>';
   }).join('') + '</div></div>';
 }).join('');
 </script>

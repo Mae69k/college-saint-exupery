@@ -24,22 +24,37 @@
   <div id='events-toutes' style='display:flex; flex-direction:column; gap:16px;'></div>
   <p style='color:var(--ink-soft); font-size:.9rem; margin-top:20px;'>* Les événements ci-dessous sont fournis à titre d'exemple uniquement. Ils ne correspondent pas à des événements réels.</p>
 </div>
+<script src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'></script>
+<script src='config.js'></script>
+<script src='contenu-site.js'></script>
 <script>
-const evenements = [
-  {date:'[Exemple : 08/10/2026]', heure:'[Ex. 14h00]', titre:'[Exemple - Réunion de rentrée]', lieu:'[Exemple - Salle]', description:'[Exemple - Description à titre indicatif.]'},
-  {date:'[Exemple : 22/10/2026]', heure:'[Ex. 10h00]', titre:'[Exemple - Sortie pédagogique]', lieu:'[Exemple - Extérieur]', description:'[Exemple - Description à titre indicatif.]'},
-  {date:'[Exemple : 12/11/2026]', heure:'[Ex. 09h00]', titre:'[Exemple - Conseil de classe]', lieu:'[Exemple - Salle de réunion]', description:'[Exemple - Description à titre indicatif.]'}
-];
-document.getElementById('events-toutes').innerHTML = evenements.map(e=>
-  <div class='card' style='padding:20px 24px;'>
-    <div style='display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:10px;'>
-      <div style='font-weight:600; color:var(--navy-dark);'></div>
-      <div style='font-size:.9rem; color:var(--ink-soft);'> • </div>
-    </div>
-    <div style='font-size:.92rem; color:var(--ink-soft); margin-bottom:6px;'>Lieu : </div>
-    <p style='color:var(--ink-soft); margin:0; line-height:1.6;'></p>
-  </div>
-).join('');
+let evenements = CONTENU_DEFAUT.evenements;
+
+function afficherAgenda() {
+  const zone = document.getElementById('events-toutes');
+
+  if (evenements.length === 0) {
+    zone.innerHTML = '<p style="color:var(--ink-soft);">Aucun événement pour le moment.</p>';
+    return;
+  }
+
+  zone.innerHTML = evenements.map(e => `
+    <div class='card' style='padding:20px 24px;'>
+      <div style='display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:10px;'>
+        <div style='font-weight:600; color:var(--navy-dark);'>${echapperTexte(e.titre)}</div>
+        <div style='font-size:.9rem; color:var(--ink-soft);'>${echapperTexte(e.date)} • ${echapperTexte(e.heure)}</div>
+      </div>
+      <div style='font-size:.92rem; color:var(--ink-soft); margin-bottom:6px;'>Lieu : ${echapperTexte(e.lieu)}</div>
+      <p style='color:var(--ink-soft); margin:0; line-height:1.6;'>${echapperTexte(e.description)}</p>
+    </div>`).join('');
+}
+
+afficherAgenda();
+
+chargerContenu().then(contenu => {
+  evenements = contenu.evenements;
+  afficherAgenda();
+});
 </script>
 </body>
 </html>

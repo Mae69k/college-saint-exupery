@@ -55,6 +55,12 @@
       <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:16px;">Accède à Pronote, GeoGebra, ton espace documentaire et plus encore.</p>
       <a href="mes-applis.html" class="submit" style="display:inline-block;text-decoration:none;padding:12px 24px;width:auto;">Ouvrir Mes applis</a>
     </div>
+
+    <div class="card" id="admin-contenu-card" style="display:none;margin-top:20px;">
+      <h3 style="margin-top:0;font-family:Arial,serif;color:var(--navy-dark);">Contenu du site</h3>
+      <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:16px;">Réservé aux administrateurs : ajoute, modifie ou supprime les annonces, événements, informations importantes et chiffres du collège.</p>
+      <a href="admin.html" class="submit" style="display:inline-block;text-decoration:none;padding:12px 24px;width:auto;">Gérer le contenu du site</a>
+    </div>
   </div>
 </div>
 
@@ -86,6 +92,16 @@ const labels = {
 
   if (compte?.profil === 'profs') {
     document.getElementById('applis-card').style.display = 'block';
+  }
+
+  const { data: profilAdmin } = await supabaseClient
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  if (profilAdmin?.role === 'superadmin') {
+    document.getElementById('admin-contenu-card').style.display = 'block';
   }
 })();
 

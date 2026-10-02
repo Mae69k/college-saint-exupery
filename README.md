@@ -138,6 +138,23 @@ Note : les comptes Admin (`profiles`) peuvent désormais se connecter via le par
 
 ---
 
+## Mise à jour — Contenu du site (annonces, agenda, chiffres)
+
+Exécute `migration-8-contenu-site.sql` dans **SQL Editor** (une seule fois). Ça autorise les visiteurs (non connectés) à lire le contenu du site. L'écriture reste réservée au superadmin.
+
+Ensuite, dans `admin.html`, l'onglet **"Contenu du site"** (visible uniquement pour le superadmin) permet de :
+- ajouter, modifier, supprimer les **annonces / informations importantes**
+- ajouter, modifier, supprimer les **actualités**
+- ajouter, modifier, supprimer les **événements de l'agenda**
+- modifier les **chiffres** du collège (élèves, personnels, classes, matières)
+- exporter / importer le contenu en JSON, ou rétablir les exemples
+
+Un bouton "Contenu du site" apparaît aussi sur `espace.html` pour les comptes superadmin.
+
+Le contenu est enregistré dans la table `settings` (clé `contenu_site`) et s'affiche automatiquement sur l'accueil, `actualites.html` et `agenda.html`. Tant que la migration n'est pas exécutée, les pages publiques affichent les données d'exemple, mais l'enregistrement depuis l'espace admin fonctionne déjà.
+
+---
+
 ## Utilisation au quotidien
 
 - **Élèves** → `inscription.html`

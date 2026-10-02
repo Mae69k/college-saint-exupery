@@ -357,6 +357,244 @@
 
 
 
+  <div class="tab-panel" id="panel-contenu">
+
+    <div class="card" style="margin-bottom:20px; background:#f8fbff; border-color:#d6e6ff;">
+
+      <h3 style="margin:0 0 6px; font-family:Arial,serif; color:var(--navy-dark);">Contenu du site</h3>
+
+      <p style="margin:0; color:var(--ink-soft); font-size:.9rem;">Ajoute, modifie ou supprime les annonces, événements, informations importantes et chiffres du collège. Les modifications sont publiées automatiquement sur le site.</p>
+
+      <div class="msg ok" id="contenu-ok" style="margin-top:14px;">Contenu publié sur le site.</div>
+
+      <div class="msg err" id="contenu-err">Erreur lors de l'enregistrement.</div>
+
+    </div>
+
+    <div class="card" style="margin-bottom:20px;">
+
+      <h3 style="margin-top:0;font-family:Arial,serif;color:var(--navy-dark);">Chiffres du collège</h3>
+
+      <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:16px;max-width:68ch;">Ces valeurs sont affichées sur la page d'accueil. Laisse les crochets pour afficher un exemple.</p>
+
+      <form id="form-stats-contenu" class="staff-form" style="grid-template-columns:repeat(4,1fr) auto;">
+
+        <div class="field">
+
+          <label for="cs-eleves">Élèves</label>
+
+          <input type="text" id="cs-eleves" placeholder="[Ex.]">
+
+        </div>
+
+        <div class="field">
+
+          <label for="cs-personnels">Personnels</label>
+
+          <input type="text" id="cs-personnels" placeholder="[Ex.]">
+
+        </div>
+
+        <div class="field">
+
+          <label for="cs-classes">Classes</label>
+
+          <input type="text" id="cs-classes" placeholder="[Ex.]">
+
+        </div>
+
+        <div class="field">
+
+          <label for="cs-matieres">Matières</label>
+
+          <input type="text" id="cs-matieres" placeholder="[Ex.]">
+
+        </div>
+
+        <button type="submit" class="submit" style="margin:0;">Enregistrer</button>
+
+      </form>
+
+    </div>
+
+    <div class="card" style="margin-bottom:20px;">
+
+      <h3 style="margin-top:0;font-family:Arial,serif;color:var(--navy-dark);">Annonces et informations importantes</h3>
+
+      <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:16px;max-width:68ch;">Affichées sur l'accueil et sur la page Actualités.</p>
+
+      <ul class="staff-list" id="liste-infos"></ul>
+
+      <form id="form-infos" class="staff-form" style="grid-template-columns:1fr 1fr;">
+
+        <div class="field">
+
+          <label for="ci-date">Date</label>
+
+          <input type="text" id="ci-date" placeholder="[Exemple : 01/10/2026]">
+
+        </div>
+
+        <div class="field">
+
+          <label for="ci-titre">Titre</label>
+
+          <input type="text" id="ci-titre" placeholder="[Exemple - Information importante]">
+
+        </div>
+
+        <div class="field" style="grid-column:1 / -1;">
+
+          <label for="ci-texte">Texte</label>
+
+          <textarea id="ci-texte" rows="3" placeholder="[Exemple - Contenu de l'annonce]"></textarea>
+
+        </div>
+
+        <div style="grid-column:1 / -1; display:flex; gap:10px; flex-wrap:wrap;">
+
+          <button type="submit" class="submit" style="margin:0;">Ajouter l'annonce</button>
+
+          <button type="button" class="action-btn reset" id="ci-annuler" style="display:none;">Annuler la modification</button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+    <div class="card" style="margin-bottom:20px;">
+
+      <h3 style="margin-top:0;font-family:Arial,serif;color:var(--navy-dark);">Actualités</h3>
+
+      <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:16px;max-width:68ch;">Affichées sur l'accueil et sur la page Actualités.</p>
+
+      <ul class="staff-list" id="liste-actualites"></ul>
+
+      <form id="form-actualites" class="staff-form" style="grid-template-columns:1fr 1fr;">
+
+        <div class="field">
+
+          <label for="ca-date">Date</label>
+
+          <input type="text" id="ca-date" placeholder="[Exemple : 01/10/2026]">
+
+        </div>
+
+        <div class="field">
+
+          <label for="ca-titre">Titre</label>
+
+          <input type="text" id="ca-titre" placeholder="[Exemple - Rentrée scolaire]">
+
+        </div>
+
+        <div class="field" style="grid-column:1 / -1;">
+
+          <label for="ca-description">Description</label>
+
+          <textarea id="ca-description" rows="3" placeholder="[Exemple - Résumé de l'actualité]"></textarea>
+
+        </div>
+
+        <div style="grid-column:1 / -1; display:flex; gap:10px; flex-wrap:wrap;">
+
+          <button type="submit" class="submit" style="margin:0;">Ajouter l'actualité</button>
+
+          <button type="button" class="action-btn reset" id="ca-annuler" style="display:none;">Annuler la modification</button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+    <div class="card" style="margin-bottom:20px;">
+
+      <h3 style="margin-top:0;font-family:Arial,serif;color:var(--navy-dark);">Événements de l'agenda</h3>
+
+      <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:16px;max-width:68ch;">Affichés sur l'accueil et sur la page Agenda.</p>
+
+      <ul class="staff-list" id="liste-evenements"></ul>
+
+      <form id="form-evenements" class="staff-form" style="grid-template-columns:1fr 1fr;">
+
+        <div class="field">
+
+          <label for="ce-date">Date</label>
+
+          <input type="text" id="ce-date" placeholder="[Exemple : 08/10/2026]">
+
+        </div>
+
+        <div class="field">
+
+          <label for="ce-heure">Heure</label>
+
+          <input type="text" id="ce-heure" placeholder="[Ex. 14h00]">
+
+        </div>
+
+        <div class="field">
+
+          <label for="ce-titre">Titre</label>
+
+          <input type="text" id="ce-titre" placeholder="[Exemple - Réunion de rentrée]">
+
+        </div>
+
+        <div class="field">
+
+          <label for="ce-lieu">Lieu</label>
+
+          <input type="text" id="ce-lieu" placeholder="[Exemple - Salle]">
+
+        </div>
+
+        <div class="field" style="grid-column:1 / -1;">
+
+          <label for="ce-description">Description</label>
+
+          <textarea id="ce-description" rows="3" placeholder="[Exemple - Détails de l'événement]"></textarea>
+
+        </div>
+
+        <div style="grid-column:1 / -1; display:flex; gap:10px; flex-wrap:wrap;">
+
+          <button type="submit" class="submit" style="margin:0;">Ajouter l'événement</button>
+
+          <button type="button" class="action-btn reset" id="ce-annuler" style="display:none;">Annuler la modification</button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+    <div class="card">
+
+      <h3 style="margin-top:0;font-family:Arial,serif;color:var(--navy-dark);">Sauvegarde</h3>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+
+        <button type="button" class="submit" style="margin:0;" onclick="enregistrerContenu()">Enregistrer tout</button>
+
+        <button type="button" class="action-btn reset" onclick="exporterContenu()">Exporter (JSON)</button>
+
+        <button type="button" class="action-btn reset" onclick="document.getElementById('import-contenu').click()">Importer (JSON)</button>
+
+        <button type="button" class="action-btn delete" onclick="reinitialiserContenu()">Rétablir les exemples</button>
+
+        <input type="file" id="import-contenu" accept="application/json" style="display:none;">
+
+      </div>
+
+      <p id="contenu-info" style="color:var(--ink-soft);font-size:.9rem;margin-top:14px;"></p>
+
+    </div>
+
+  </div>
+
   <div class="tab-panel" id="panel-messagerie">
 
     <div class="card" style="margin-bottom:20px; background:#f8fbff; border-color:#d6e6ff;">
@@ -428,6 +666,8 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="contenu-site.js"></script>
 
 <script src="config.js"></script>
 
@@ -519,6 +759,8 @@ async function enterAdmin() {
 
     document.getElementById('tab-messagerie-btn').style.display = 'inline-block';
 
+    document.getElementById('tab-contenu-btn').style.display = 'inline-block';
+
     loadStaffList();
 
     loadEcoleAccounts();
@@ -526,6 +768,8 @@ async function enterAdmin() {
     loadHoraires();
 
     loadMaintenanceList();
+
+    loadContenu();
 
     if (window.disableImageProtection) window.disableImageProtection();
 
@@ -1420,6 +1664,401 @@ async function loadMaintenanceList() {
     </li>`).join('');
 
 }
+
+
+
+// ---------- Contenu du site (actualités, événements, infos, chiffres) ----------
+
+// fieldId : identifiant du champ dans le formulaire, suffixe : libellé du bouton,
+// resume : fonction qui résume un élément pour la liste.
+
+const CONTENU_SECTIONS = {
+
+  infos: { liste: 'liste-infos', bouton: 'Ajouter l\'annonce', champs: { date: 'ci-date', titre: 'ci-titre', texte: 'ci-texte' }, resume: i => `${i.date || ''} — ${i.titre || ''}` },
+
+  actualites: { liste: 'liste-actualites', bouton: 'Ajouter l\'actualité', champs: { date: 'ca-date', titre: 'ca-titre', description: 'ca-description' }, resume: i => `${i.date || ''} — ${i.titre || ''}` },
+
+  evenements: { liste: 'liste-evenements', bouton: 'Ajouter l\'événement', champs: { date: 'ce-date', heure: 'ce-heure', titre: 'ce-titre', lieu: 'ce-lieu', description: 'ce-description' }, resume: i => `${i.date || ''} ${i.heure || ''} — ${i.titre || ''} (${i.lieu || ''})` }
+
+};
+
+let contenuState = null;
+
+let editionCourante = { infos: null, actualites: null, evenements: null };
+
+
+
+async function loadContenu() {
+
+  contenuState = await window.chargerContenu();
+
+  afficherContenu();
+
+  majInfoContenu('Contenu chargé.');
+
+}
+
+
+
+function afficherContenu() {
+
+  editionCourante = { infos: null, actualites: null, evenements: null };
+
+  document.getElementById('cs-eleves').value = contenuState.stats.eleves ?? '';
+
+  document.getElementById('cs-personnels').value = contenuState.stats.personnels ?? '';
+
+  document.getElementById('cs-classes').value = contenuState.stats.classes ?? '';
+
+  document.getElementById('cs-matieres').value = contenuState.stats.matieres ?? '';
+
+  Object.keys(CONTENU_SECTIONS).forEach(type => {
+
+    viderFormulaire(type);
+
+    renderListe(type);
+
+  });
+
+}
+
+
+
+function renderListe(type) {
+
+  const config = CONTENU_SECTIONS[type];
+
+  const el = document.getElementById(config.liste);
+
+  const items = contenuState[type] || [];
+
+  if (items.length === 0) {
+
+    el.innerHTML = `<li style="border:none;color:var(--ink-soft);">Aucun élément pour le moment.</li>`;
+
+    return;
+
+  }
+
+  el.innerHTML = items.map((item, i) => `
+
+    <li>
+
+      <span>${escapeHtml(config.resume(item))}</span>
+
+      <span class="staff-actions">
+
+        <button class="action-btn reset" onclick="modifierContenu('${type}', ${i})">Modifier</button>
+
+        <button class="action-btn delete" onclick="supprimerContenu('${type}', ${i})">Supprimer</button>
+
+      </span>
+
+    </li>`).join('');
+
+}
+
+
+
+function majBoutonEdition(type, enEdition) {
+
+  const config = CONTENU_SECTIONS[type];
+
+  const suffixe = type === 'infos' ? 'ci' : (type === 'actualites' ? 'ca' : 'ce');
+
+  const form = document.getElementById(`form-${type}`);
+
+  const bouton = form.querySelector('button[type="submit"]');
+
+  bouton.textContent = enEdition ? 'Enregistrer les modifications' : config.bouton;
+
+  document.getElementById(`${suffixe}-annuler`).style.display = enEdition ? 'inline-block' : 'none';
+
+}
+
+
+
+function majInfoContenu(texte) {
+
+  const el = document.getElementById('contenu-info');
+
+  if (el && texte) el.textContent = texte;
+
+}
+
+
+
+function viderFormulaire(type) {
+
+  const config = CONTENU_SECTIONS[type];
+
+  Object.values(config.champs).forEach(id => { document.getElementById(id).value = ''; });
+
+  editionCourante[type] = null;
+
+  majBoutonEdition(type, false);
+
+}
+
+
+
+function modifierContenu(type, index) {
+
+  const config = CONTENU_SECTIONS[type];
+
+  const item = contenuState[type][index];
+
+  if (!item) return;
+
+  Object.entries(config.champs).forEach(([cle, id]) => {
+
+    document.getElementById(id).value = item[cle] ?? '';
+
+  });
+
+  editionCourante[type] = index;
+
+  majBoutonEdition(type, true);
+
+  document.getElementById(`form-${type}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+}
+
+
+
+function supprimerContenu(type, index) {
+
+  const config = CONTENU_SECTIONS[type];
+
+  const item = contenuState[type][index];
+
+  if (!item) return;
+
+  if (!confirm(`Supprimer « ${item.titre || 'cet élément'} » ?`)) return;
+
+  contenuState[type].splice(index, 1);
+
+  if (editionCourante[type] === index) viderFormulaire(type);
+
+  renderListe(type);
+
+  enregistrerContenu();
+
+}
+
+
+
+function lireFormulaire(type) {
+
+  const config = CONTENU_SECTIONS[type];
+
+  const item = {};
+
+  Object.entries(config.champs).forEach(([cle, id]) => { item[cle] = document.getElementById(id).value.trim(); });
+
+  if (!item.titre) {
+
+    alert('Merci de renseigner un titre.');
+
+    return null;
+
+  }
+
+  return item;
+
+}
+
+
+
+function ajouterOuModifier(type) {
+
+  const item = lireFormulaire(type);
+
+  if (!item) return;
+
+  const index = editionCourante[type];
+
+  if (index === null) {
+
+    contenuState[type].unshift(item);
+
+  } else {
+
+    contenuState[type][index] = item;
+
+  }
+
+  viderFormulaire(type);
+
+  renderListe(type);
+
+  enregistrerContenu();
+
+}
+
+
+
+async function enregistrerContenu() {
+
+  const ok = document.getElementById('contenu-ok');
+
+  const err = document.getElementById('contenu-err');
+
+  const res = await window.sauverContenu(contenuState);
+
+  if (res.ok) {
+
+    err.style.display = 'none';
+
+    ok.style.display = 'block';
+
+    ok.textContent = '✓ ' + res.message;
+
+  } else {
+
+    ok.style.display = 'none';
+
+    err.style.display = 'block';
+
+    err.textContent = res.message;
+
+  }
+
+  majInfoContenu(res.message + ' Dernière action : ' + new Date().toLocaleString('fr-FR'));
+
+}
+
+
+
+function exporterContenu() {
+
+  const blob = new Blob([JSON.stringify(contenuState, null, 2)], { type: 'application/json' });
+
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+
+  a.href = url;
+
+  a.download = 'contenu-site.json';
+
+  a.click();
+
+  URL.revokeObjectURL(url);
+
+}
+
+
+
+async function importerContenu(fichier) {
+
+  let data;
+
+  try {
+
+    data = JSON.parse(await fichier.text());
+
+  } catch (e) {
+
+    alert('Fichier JSON illisible.');
+
+    return;
+
+  }
+
+  contenuState = normaliserContenuAdmin(data);
+
+  afficherContenu();
+
+  enregistrerContenu();
+
+}
+
+
+
+function normaliserContenuAdmin(data) {
+
+  const source = data && typeof data === 'object' ? data : {};
+
+  return {
+
+    actualites: Array.isArray(source.actualites) ? source.actualites : [],
+
+    evenements: Array.isArray(source.evenements) ? source.evenements : [],
+
+    infos: Array.isArray(source.infos) ? source.infos : [],
+
+    stats: Object.assign({}, window.CONTENU_DEFAUT.stats, source.stats || {})
+
+  };
+
+}
+
+
+
+function reinitialiserContenu() {
+
+  if (!confirm('Rétablir les données d\'exemple ? Les contenus actuels seront remplacés.')) return;
+
+  contenuState = normaliserContenuAdmin(window.CONTENU_DEFAUT);
+
+  afficherContenu();
+
+  enregistrerContenu();
+
+}
+
+
+
+// Branchement des formulaires de contenu
+
+Object.keys(CONTENU_SECTIONS).forEach(type => {
+
+  document.getElementById(`form-${type}`).addEventListener('submit', e => {
+
+    e.preventDefault();
+
+    ajouterOuModifier(type);
+
+  });
+
+  const suffixe = type === 'infos' ? 'ci' : (type === 'actualites' ? 'ca' : 'ce');
+
+  document.getElementById(`${suffixe}-annuler`).addEventListener('click', () => viderFormulaire(type));
+
+});
+
+
+
+document.getElementById('form-stats-contenu').addEventListener('submit', e => {
+
+  e.preventDefault();
+
+  contenuState.stats = {
+
+    eleves: document.getElementById('cs-eleves').value.trim() || '[Ex.]',
+
+    personnels: document.getElementById('cs-personnels').value.trim() || '[Ex.]',
+
+    classes: document.getElementById('cs-classes').value.trim() || '[Ex.]',
+
+    matieres: document.getElementById('cs-matieres').value.trim() || '[Ex.]'
+
+  };
+
+  enregistrerContenu();
+
+});
+
+
+
+document.getElementById('import-contenu').addEventListener('change', e => {
+
+  if (e.target.files && e.target.files[0]) importerContenu(e.target.files[0]);
+
+  e.target.value = '';
+
+});
 
 
 

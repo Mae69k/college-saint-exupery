@@ -23,20 +23,34 @@
   <h1 style='font-family:Arial, sans-serif; color:var(--navy-dark); margin:14px 0 24px;'>Actualités du collège</h1>
   <div id='actus-toutes' style='display:flex; flex-direction:column; gap:20px;'></div>
 </div>
+<script src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'></script>
+<script src='config.js'></script>
+<script src='contenu-site.js'></script>
 <script>
-const actualites = [
-  {date:'[Exemple : 01/10/2026]', titre:'[Exemple - Rentrée scolaire]', description:'[Exemple - Informations relatives à la rentrée. Données à titre d exemple uniquement.]'},
-  {date:'[Exemple : 15/10/2026]', titre:'[Exemple - Sortie pédagogique]', description:'[Exemple - Annonce à titre indicatif. Données à titre d exemple uniquement.]'},
-  {date:'[Exemple : 05/11/2026]', titre:'[Exemple - Activité du collège]', description:'[Exemple - Actualité d exemple, modifiable dans le code.]'}
-];
-document.getElementById('actus-toutes').innerHTML = actualites.map(a=>
-  <div class='card'>
-    <div style='font-size:.85rem; color:var(--ink-soft); margin-bottom:8px;'></div>
-    <h3 style='margin:0 0 10px; font-family:Arial,sans-serif; color:var(--navy-dark);'></h3>
-    <p style='color:var(--ink-soft); line-height:1.6; margin:0 0 16px;'></p>
-    <button class='submit' style='width:auto; padding:10px 18px;' onclick="alert('Service prochainement disponible.');">Lire la suite</button>
-  </div>
-).join('');
+let actualites = CONTENU_DEFAUT.actualites;
+
+function afficherActualites() {
+  const zone = document.getElementById('actus-toutes');
+
+  if (actualites.length === 0) {
+    zone.innerHTML = '<p style="color:var(--ink-soft);">Aucune actuelle pour le moment.</p>';
+    return;
+  }
+
+  zone.innerHTML = actualites.map(a => `
+    <div class='card'>
+      <div style='font-size:.85rem; color:var(--ink-soft); margin-bottom:8px;'>${echapperTexte(a.date)}</div>
+      <h3 style='margin:0 0 10px; font-family:Arial,sans-serif; color:var(--navy-dark);'>${echapperTexte(a.titre)}</h3>
+      <p style='color:var(--ink-soft); line-height:1.6; margin:0;'>${echapperTexte(a.description)}</p>
+    </div>`).join('');
+}
+
+afficherActualites();
+
+chargerContenu().then(contenu => {
+  actualites = contenu.actualites;
+  afficherActualites();
+});
 </script>
 </body>
 </html>

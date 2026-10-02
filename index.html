@@ -442,6 +442,265 @@
  }
 
 
+.portal-block{
+  
+    max-width:1100px;
+  
+    margin:0 auto;
+  
+    padding:0 24px 20px;
+  
+  }
+  
+  
+  .portal-head{
+  
+    display:flex;
+  
+    align-items:flex-end;
+  
+    justify-content:space-between;
+  
+    flex-wrap:wrap;
+  
+    gap:12px;
+  
+    margin-bottom:22px;
+  
+  }
+  
+  
+  .portal-head h2{
+  
+    font-family:Arial, sans-serif;
+  
+    color:var(--navy-dark);
+  
+    font-size:1.6rem;
+  
+    margin:0;
+  
+  }
+  
+  
+  .portal-link{
+  
+    color:var(--navy);
+  
+    font-weight:600;
+  
+    font-size:.92rem;
+  
+    text-decoration:none;
+  
+  }
+  
+  
+  .portal-link:hover{text-decoration:underline;}
+  
+  
+  .portal-sub{
+  
+    color:var(--ink-soft);
+  
+    font-size:.9rem;
+  
+    margin:6px 0 0;
+  
+  }
+  
+  
+  .portal-grid{
+  
+    display:grid;
+  
+    grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+  
+    gap:20px;
+  
+  }
+  
+  
+  .portal-card{
+  
+    background:#fff;
+  
+    border:1px solid var(--line);
+  
+    border-radius:12px;
+  
+    padding:22px;
+  
+  }
+  
+  
+  .portal-card h3{
+  
+    font-family:Arial, sans-serif;
+  
+    color:var(--navy-dark);
+  
+    font-size:1.05rem;
+  
+    margin:0 0 14px;
+  
+  }
+  
+  
+  .portal-item{
+  
+    background:#f8fbff;
+  
+    border:1px solid var(--line);
+  
+    border-radius:10px;
+  
+    padding:14px 16px;
+  
+    margin-bottom:12px;
+  
+  }
+  
+  
+  .portal-item:last-child{margin-bottom:0;}
+  
+  
+  .portal-item .date{
+  
+    font-size:.82rem;
+  
+    color:var(--ink-soft);
+  
+    margin-bottom:6px;
+  
+  }
+  
+  
+  .portal-item .titre{
+  
+    font-weight:600;
+  
+    color:var(--navy-dark);
+  
+    margin-bottom:6px;
+  
+  }
+  
+  
+  .portal-item p{
+  
+    color:var(--ink-soft);
+  
+    font-size:.92rem;
+  
+    line-height:1.6;
+  
+    margin:0;
+  
+  }
+  
+  
+  .portal-stats{
+  
+    display:grid;
+  
+    grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));
+  
+    gap:16px;
+  
+    margin-top:24px;
+  
+  }
+  
+  
+  .portal-stat{
+  
+    background:#fff;
+  
+    border:1px solid var(--line);
+  
+    border-radius:12px;
+  
+    padding:18px;
+  
+    text-align:center;
+  
+  }
+  
+  
+  .portal-stat .valeur{
+  
+    font-family:Arial, sans-serif;
+  
+    font-size:1.5rem;
+  
+    font-weight:700;
+  
+    color:var(--navy-dark);
+  
+  }
+  
+  
+  .portal-stat .libelle{
+  
+    font-size:.85rem;
+  
+    color:var(--ink-soft);
+  
+    margin-top:4px;
+  
+  }
+  
+  
+  .portal-empty{
+  
+    color:var(--ink-soft);
+  
+    font-size:.9rem;
+  
+    margin:0;
+  
+  }
+  
+  
+  .portal-raccourcis{
+  
+    display:flex;
+  
+    flex-wrap:wrap;
+  
+    gap:10px;
+  
+    margin-top:24px;
+  
+  }
+  
+  
+  .portal-raccourcis a{
+  
+    display:inline-block;
+  
+    padding:10px 16px;
+  
+    border:1px solid var(--line);
+  
+    border-radius:8px;
+  
+    background:#fff;
+  
+    color:var(--navy-dark);
+  
+    text-decoration:none;
+  
+    font-weight:600;
+  
+    font-size:.9rem;
+  
+  }
+  
+  
+  .portal-raccourcis a:hover{border-color:var(--navy);}
+  
 </style>
 
 
@@ -572,6 +831,105 @@
 </div>
 
 
+<div class="portal-block">
+
+
+  <div class="portal-head">
+
+
+    <div>
+
+
+      <h2>Vie du collège</h2>
+
+
+      <p class="portal-sub">Les informations sont publiées depuis l'espace d'administration.</p>
+
+
+    </div>
+
+
+  </div>
+
+
+  <div id="infos-list" style="margin-bottom:24px;"></div>
+
+
+  <div class="portal-grid">
+
+
+    <div class="portal-card">
+
+
+      <h3>Actualités</h3>
+
+
+      <div id="actus-list"></div>
+
+
+      <a class="portal-link" href="actualites.html">Voir toutes les actualités</a>
+
+
+    </div>
+
+
+    <div class="portal-card">
+
+
+      <h3>Agenda</h3>
+
+
+      <div id="events-list"></div>
+
+
+      <a class="portal-link" href="agenda.html">Voir tout l'agenda</a>
+
+
+    </div>
+
+
+  </div>
+
+
+  <div class="portal-stats">
+
+
+    <div class="portal-stat"><div class="valeur" id="stat-eleves">[Ex.]</div><div class="libelle">Élèves</div></div>
+
+
+    <div class="portal-stat"><div class="valeur" id="stat-personnels">[Ex.]</div><div class="libelle">Personnels</div></div>
+
+
+    <div class="portal-stat"><div class="valeur" id="stat-classes">[Ex.]</div><div class="libelle">Classes</div></div>
+
+
+    <div class="portal-stat"><div class="valeur" id="stat-matieres">[Ex.]</div><div class="libelle">Matières</div></div>
+
+
+  </div>
+
+
+  <div class="portal-raccourcis">
+
+
+    <a href="actualites.html">Actualités</a>
+
+
+    <a href="agenda.html">Agenda</a>
+
+
+    <a href="equipe.html">Équipe</a>
+
+
+    <a href="espace.html">Mon espace</a>
+
+
+  </div>
+
+
+</div>
+
+
 <div class="home-footer">Collège Saint-Exupéry — Établissement scolaire virtuel Discord</div>
 
 
@@ -582,6 +940,12 @@
 
 
 <script src="config.js"></script>
+
+
+<script src="contenu-site.js"></script>
+
+
+<script src="index-datas.js"></script>
 
 
 <script>
@@ -727,6 +1091,3 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 </html>
-
-
-<script src='index-datas.js'></script>
