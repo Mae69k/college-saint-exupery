@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sélection du profil — EduCollège</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<script src="protect.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    background:#fff;
+    color:#1a1a1a;
+  }
+  .ec-topline{height:4px;background:#1a56db;}
+  header.ec-head{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:26px 40px;
+  }
+  header.ec-head img{height:52px;}
+  header.ec-head .titles h1{
+    margin:0;
+    font-size:1.4rem;
+    font-weight:700;
+  }
+  header.ec-head .titles p{
+    margin:2px 0 0;
+    font-size:.85rem;
+    color:#4a5568;
+    max-width:420px;
+  }
+  main{
+    max-width:1000px;
+    margin:20px auto 0;
+    padding:0 40px 60px;
+    display:flex;
+    gap:40px;
+    flex-wrap:wrap;
+  }
+  .ec-info{
+    flex:1;
+    min-width:260px;
+    padding-top:8px;
+  }
+  .ec-info h2{font-size:1.05rem;margin:0 0 14px;}
+  .ec-info ul{padding-left:18px;margin:0;font-size:.92rem;color:#333;line-height:1.7;}
+  .ec-select{
+    flex:1.3;
+    min-width:300px;
+  }
+  .ec-select h2{font-size:1.05rem;margin:0 0 18px;}
+  .ec-profiles{
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+  }
+  .profile-card{
+    flex:1;
+    min-width:150px;
+    background:#fafbfc;
+    border:1px solid #e2e4e8;
+    border-radius:6px;
+    padding:26px 18px;
+    text-align:center;
+    text-decoration:none;
+    color:#1a1a1a;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  .profile-card:hover{border-color:#1a56db;box-shadow:0 2px 8px rgba(26,86,219,.1);}
+  .profile-card .icon{font-size:2.1rem;margin-bottom:14px;}
+  .profile-card .btn{
+    display:inline-block;
+    margin-top:16px;
+    background:#1a56db;
+    color:#fff;
+    font-weight:600;
+    font-size:.88rem;
+    padding:10px 16px;
+    border-radius:5px;
+  }
+  footer.ec-foot{
+    border-top:1px solid #e2e4e8;
+    margin-top:40px;
+    padding:26px 40px;
+    display:flex;
+    align-items:center;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  footer.ec-foot img{height:60px;}
+  footer.ec-foot p{margin:0;font-size:.82rem;color:#4a5568;}
+  .ec-back{
+    display:block;
+    max-width:1000px;
+    margin:0 auto;
+    padding:16px 40px 0;
+    font-size:.85rem;
+    color:#5a6472;
+    text-decoration:none;
+  }
+</style>
+</head>
+<body>
+
+<div class="ec-topline"></div>
+<header class="ec-head">
+  <img src="assets/logo_seul_educ_national.png" alt="Collège Saint-Exupéry">
+  <div class="titles">
+    <h1>EduCollège</h1>
+    <p>Un compte unique pour les services numériques du Collège Saint-Exupéry</p>
+  </div>
+</header>
+
+<a href="connexion-type.html" class="ec-back">← Changer de profil</a>
+
+<main>
+  <div class="ec-info">
+    <h2>Le compte EduCollège peut donner accès :</h2>
+    <ul id="info-list">
+      <li>à l'espace numérique de travail (ENT) ;</li>
+      <li>aux démarches administratives internes.</li>
+    </ul>
+  </div>
+  <div class="ec-select">
+    <h2 id="select-title">Je sélectionne mon profil</h2>
+    <div class="ec-profiles" id="profiles-container"></div>
+  </div>
+</main>
+
+<footer class="ec-foot">
+  <img src="assets/logo_educ_national.png" alt="Collège Saint-Exupéry">
+  <p>Un compte unique pour les services numériques du Collège Saint-Exupéry</p>
+</footer>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const type = params.get('type');
+const container = document.getElementById('profiles-container');
+
+const profils = {
+  eleve: [
+    { label: 'Responsable d\'élève', profil: 'responsable', icon: '🧑‍🤝‍🧑' },
+    { label: 'Élève', profil: 'eleve', icon: '🎒' }
+  ],
+  personnel: [
+    { label: 'Personnel de la Direction', profil: 'direction', icon: '🗄️' },
+    { label: 'Personnel d\'éducation (CPE, AED)', profil: 'education', icon: '🏫' },
+    { label: 'Personnel enseignant', profil: 'profs', icon: '📋' }
+  ]
+};
+
+const list = profils[type] || profils.eleve;
+
+container.innerHTML = list.map(p => `
+  <a class="profile-card" href="connexion.html?profil=${p.profil}">
+    <div class="icon">${p.icon}</div>
+    <div>${p.label}</div>
+    <span class="btn">Continuer</span>
+  </a>
+`).join('');
+</script>
+
+</body>
+</html>

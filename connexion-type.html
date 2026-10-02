@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connexion — Collège Saint-Exupéry</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<script src="protect.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    background:#f4f5f7;
+    color:#1a1a1a;
+    min-height:100vh;
+  }
+  .ec-header{
+    text-align:center;
+    padding:48px 20px 20px;
+  }
+  .ec-header img{
+    max-height:90px;
+    max-width:320px;
+  }
+  .ec-card{
+    max-width:560px;
+    margin:24px auto 0;
+    background:#fff;
+    border:1px solid #e2e4e8;
+    border-radius:4px;
+    padding:34px 38px;
+  }
+  .ec-card p.intro{
+    margin:0 0 22px;
+    font-size:.98rem;
+    line-height:1.5;
+    color:#2a2a2a;
+  }
+  .ec-option{
+    display:block;
+    padding:16px 4px;
+    border-bottom:1px solid #eceff2;
+    cursor:pointer;
+    font-size:1rem;
+  }
+  .ec-option:last-of-type{border-bottom:none;}
+  .ec-option input{
+    margin-right:12px;
+    accent-color:#1a56db;
+  }
+  .ec-actions{
+    display:flex;
+    justify-content:flex-end;
+    margin-top:20px;
+  }
+  .ec-btn{
+    background:#1a56db;
+    color:#fff;
+    border:none;
+    padding:11px 26px;
+    font-size:.95rem;
+    font-weight:600;
+    border-radius:5px;
+    cursor:pointer;
+    font-family:'Inter',sans-serif;
+  }
+  .ec-btn:hover{background:#164bc0;}
+  .ec-back{
+    display:block;
+    max-width:560px;
+    margin:14px auto 0;
+    font-size:.85rem;
+    color:#5a6472;
+    text-decoration:none;
+  }
+  .ec-back:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<div class="ec-header">
+  <img src="assets/exucollege_logo_fond_blanc.png" alt="Collège Saint-Exupéry">
+</div>
+
+<div class="ec-card">
+  <p class="intro">Bienvenue sur votre Environnement Numérique de Travail. Vous voulez vous connecter à l'ENT en tant que :</p>
+
+  <form id="form-type">
+    <label class="ec-option">
+      <input type="radio" name="type" value="eleve" checked>
+      Élève ou parent avec un compte EduCollège
+    </label>
+    <label class="ec-option">
+      <input type="radio" name="type" value="personnel">
+      Personnel de l'établissement
+    </label>
+    <label class="ec-option">
+      <input type="radio" name="type" value="academie">
+      Académie
+    </label>
+    <label class="ec-option">
+      <input type="radio" name="type" value="administration">
+      Administration
+    </label>
+
+    <div class="ec-actions">
+      <button type="submit" class="ec-btn">Valider</button>
+    </div>
+  </form>
+</div>
+  </form>
+</div>
+
+<a href="index.html" class="ec-back">← Retour à l'accueil</a>
+
+<script>
+document.getElementById('form-type').addEventListener('submit', function (e) {
+  e.preventDefault();
+  const type = document.querySelector('input[name="type"]:checked').value;
+
+  if (type === 'academie') {
+    window.location.href = 'connexion.html?profil=academie';
+  } else if (type === 'administration') {
+    window.location.href = 'admin.html';
+  } else {
+    window.location.href = 'connexion-profil.html?type=' + type;
+  }
+});
+</script>
+
+</body>
+</html>

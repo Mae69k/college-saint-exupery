@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collège Saint-Exupéry</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="stylesheet" href="style.css">
+<style>
+  body{
+    background:
+      linear-gradient(180deg, rgba(8,39,68,.55) 0%, rgba(8,39,68,.75) 100%),
+      url('assets/fond-bleu-site.avif') center/cover no-repeat fixed;
+    min-height:100vh;
+  }
+  .home-nav{
+    max-width:920px;
+    margin:0 auto;
+    padding:22px 24px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .home-nav .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#fff;
+  }
+  .home-nav .brand img{height:38px;}
+  .home-nav .brand span{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:1.05rem;
+  }
+  .home-nav .links{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .home-nav .links a{
+    color:#fff;
+    text-decoration:none;
+    font-size:.88rem;
+    font-weight:600;
+    padding:10px 18px;
+    border-radius:7px;
+    border:1px solid rgba(255,255,255,.35);
+    background:rgba(255,255,255,.08);
+    transition:background .15s, border-color .15s;
+  }
+  .home-nav .links a:hover{
+    background:rgba(255,255,255,.18);
+    border-color:rgba(255,255,255,.6);
+  }
+  .home-nav .links a.primary{
+    background:var(--gold);
+    border-color:var(--gold);
+    color:var(--navy-dark);
+  }
+  .home-nav .links a.primary:hover{
+    background:#ffb840;
+  }
+  .home-hero{
+    max-width:780px;
+    margin:9vh auto 0;
+    padding:0 24px;
+    text-align:center;
+    color:#fff;
+  }
+  .home-hero img.crest{
+    width:110px;
+    margin-bottom:22px;
+  }
+  .home-hero h1{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:2.6rem;
+    line-height:1.15;
+    margin:0 0 18px;
+  }
+  .home-hero p{
+    font-size:1.05rem;
+    line-height:1.65;
+    color:#dbe6f0;
+    margin:0 auto 36px;
+    max-width:56ch;
+  }
+  .home-hero .cta{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .home-hero .cta a{
+    text-decoration:none;
+    font-weight:600;
+    font-size:.95rem;
+    padding:14px 26px;
+    border-radius:8px;
+  }
+  .home-hero .cta a.primary{
+    background:var(--gold);
+    color:var(--navy-dark);
+  }
+  .home-hero .cta a.primary:hover{background:#ffb840;}
+  .home-hero .cta a.secondary{
+    background:rgba(255,255,255,.1);
+    color:#fff;
+    border:1px solid rgba(255,255,255,.4);
+  }
+  .home-hero .cta a.secondary:hover{background:rgba(255,255,255,.2);}
+  .about-block{
+    max-width:820px;
+    margin:9vh auto 0;
+    padding:36px 40px;
+    border-radius:12px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);
+    color:#eaf1f8;
+    backdrop-filter:blur(6px);
+  }
+  .about-block h2{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:1.3rem;
+    margin:0 0 14px;
+    color:#fff;
+  }
+  .about-block p{
+    font-size:.95rem;
+    line-height:1.7;
+    margin:0 0 12px;
+  }
+  .about-block p:last-child{margin-bottom:0;}
+  .home-footer{
+    text-align:center;
+    color:#c3d3e2;
+    font-size:.78rem;
+    padding:60px 24px 40px;
+  }
+  @media (max-width:640px){
+    .home-nav{flex-direction:column;text-align:center;}
+    .home-hero h1{font-size:2rem;}
+    .about-block{padding:28px 24px;}
+  }
+</style>
+</head>
+<body>
+<script src="protect.js"></script>
+<div class="home-nav">
+  <div class="brand">
+    <img src="assets/favicon.png" alt="Collège Saint-Exupéry">
+    <span>Collège Saint-Exupéry</span>
+  </div>
+  <div class="links" id="nav-links">
+    <a href="inscription.html">Inscription élève</a>
+    <a href="recrutement.html">Recrutement</a>
+    <a href="connexion-type.html" id="login-link">Se connecter</a>
+    <a href="admin.html" class="primary" id="admin-link" style="display:none;">Administration</a>
+  </div>
+  <div id="account-menu" style="display:none; position:relative;">
+    <button id="account-btn" style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.35); color:#fff; padding:8px 12px; border-radius:7px; cursor:pointer; display:flex; align-items:center; gap:8px; font-weight:600;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      Mon compte
+    </button>
+    <div id="account-dropdown" style="display:none; position:absolute; right:0; top:100%; margin-top:8px; background:#fff; border:1px solid #e2e6eb; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,.15); min-width:220px; overflow:hidden; z-index:1000;">
+      <a href="espace.html" style="display:block; padding:12px 16px; color:#17202a; text-decoration:none; border-bottom:1px solid #f0f2f5;">Accéder à mon compte</a>
+      <a href="mes-applis.html" style="display:block; padding:12px 16px; color:#17202a; text-decoration:none; border-bottom:1px solid #f0f2f5;">Mes applis</a>
+      <a href="messagerie.html" style="display:block; padding:12px 16px; color:#17202a; text-decoration:none; border-bottom:1px solid #f0f2f5;">Messagerie</a>
+      <a href="espace-documentaire.html" style="display:block; padding:12px 16px; color:#17202a; text-decoration:none; border-bottom:1px solid #f0f2f5;">Espace documentaire</a>
+      <a href="#" id="logout-btn" style="display:block; padding:12px 16px; color:#c0392b; text-decoration:none;">Se déconnecter</a>
+    </div>
+  </div>
+</div>
+</div>
+<div class="home-hero">
+  <img class="crest" src="assets/logo.png" alt="Logo Collège Saint-Exupéry">
+  <h1>Bienvenue au Collège Saint-Exupéry</h1>
+  <p>Un établissement scolaire virtuel de rôleplay sur Discord où élèves, professeurs et personnel de direction donnent vie à la vie scolaire d'un collège, dans un cadre sérieux, immersif et organisé.</p>
+  <div class="cta">
+    <a href="inscription.html" class="primary">Je veux m'inscrire</a>
+    <a href="recrutement.html" class="secondary">Rejoindre le personnel</a>
+  </div>
+</div>
+<div class="about-block">
+  <h2>À propos de l'établissement</h2>
+  <p>Le Collège Saint-Exupéry accueille des élèves de la 6ème à la 3ème dans un environnement de rôleplay pensé pour être immersif : classes, personnel encadrant, vie scolaire et suivi administratif via ce site.</p>
+  <p>Le Collège Saint-Exupéry est un établissement entièrement virtuel. Il ne s'agit pas d'un collège physique et aucune inscription ne donne accès à un établissement scolaire réel. Les activités, cours, inscriptions et échanges se déroulent dans le cadre du projet et de sa communauté Discord.</p>
+</div>
+<div class="home-footer">Collège Saint-Exupéry — Établissement scolaire virtuel de rôleplay Discord</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (user) {
+    const loginLink = document.getElementById('login-link');
+    const navLinks = document.getElementById('nav-links');
+    const accountMenu = document.getElementById('account-menu');
+    const accountBtn = document.getElementById('account-btn');
+    const accountDropdown = document.getElementById('account-dropdown');
+    const logoutBtn = document.getElementById('logout-btn');
+    const adminLink = document.getElementById('admin-link');
+    
+    if (loginLink) loginLink.style.display = 'none';
+    if (accountMenu) accountMenu.style.display = 'block';
+    
+    // Check if user is admin
+    const { data: profile } = await supabaseClient
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+    if (profile && (profile.role === 'admin' || profile.role === 'superadmin')) {
+      if (adminLink) adminLink.style.display = 'inline-block';
+    }
+    
+    accountBtn.addEventListener('click', () => {
+      accountDropdown.style.display = accountDropdown.style.display === 'none' ? 'block' : 'none';
+    });
+    
+    document.addEventListener('click', (e) => {
+      if (!accountMenu.contains(e.target)) {
+        accountDropdown.style.display = 'none';
+      }
+    });
+    
+    logoutBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      await supabaseClient.auth.signOut();
+      window.location.reload();
+    });
+  }
+});
+</script>
+</body>
+</html>

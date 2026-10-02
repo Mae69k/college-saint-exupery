@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administration — Collège Saint-Exupéry</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src="protect.js"></script>
+
+<!-- ÉCRAN DE CONNEXION -->
+<div id="login-screen" class="login-shell">
+  <a href="index.html" class="back-link">← Retour à l'accueil</a>
+  <div class="card">
+    <img src="assets/favicon.png" alt="Collège Saint-Exupéry">
+    <h1>Espace administration</h1>
+    <form id="form-login">
+      <div class="field">
+        <label for="login-username">Email</label>
+        <input type="text" id="login-username" required autocomplete="username">
+      </div>
+      <div class="field">
+        <label for="login-password">Mot de passe</label>
+        <input type="password" id="login-password" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="submit" id="btn-login">Se connecter</button>
+      <div class="msg err" id="login-err">Identifiant ou mot de passe incorrect.</div>
+    </form>
+  </div>
+</div>
+
+<!-- ESPACE ADMIN -->
+<div id="admin-screen" class="admin-shell" style="display:none;">
+  <div class="topbar" style="margin:-32px -24px 28px;">
+    <div class="topbar-inner">
+      <img src="assets/favicon.png" alt="Collège Saint-Exupéry">
+      <div class="topbar-text">
+        <div class="etab">Collège Saint-Exupéry</div>
+        <div class="sub">Espace d'administration</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-head">
+    <div>
+      <a href="index.html" class="back-link">← Retour à l'accueil</a>
+      <h1>Tableau de bord - Administration</h1>
+      <p style="color:var(--ink-soft);font-size:.92rem;margin:8px 0 0;max-width:68ch;">Gérez les inscriptions, recrutements, comptes et paramètres du site depuis cet espace.</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <span class="who" id="who-label"></span>
+      <button class="logout-btn" id="btn-logout">Se déconnecter</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="inscriptions">Inscriptions élèves</button>
+    <button class="tab-btn" data-tab="recrutements">Recrutements (personnel)</button>
+    <button class="tab-btn" data-tab="personnel" id="tab-personnel-btn" style="display:none;">Gestion du personnel admin</button>
+    <button class="tab-btn" data-tab="comptes-ecole" id="tab-comptes-ecole-btn" style="display:none;">Comptes élèves & personnel</button>
+    <button class="tab-btn" data-tab="messagerie" id="tab-messagerie-btn" style="display:none;">Messagerie & maintenance</button>
+  </div>
+
+  <div class="tab-panel active" id="panel-inscriptions">
+    <div class="card" style="margin-bottom:20px; background:#f8fbff; border-color:#d6e6ff;">
+      <h3 style="margin:0 0 6px; font-family:'Fraunces',serif; color:var(--navy-dark);">Demandes d'inscription (élèves)</h3>
+      <p style="margin:0; color:var(--ink-soft); font-size:.9rem;">Gérez les candidatures d'inscription des élèves. Vous pouvez accepter, refuser ou consulter les informations.</p>
+    </div>
+    <div class="toolbar">
+      <input type="text" class="search-input" id="search-inscriptions" placeholder="Rechercher par nom, prénom ou Discord...">
+      <select class="filter-select" id="filter-classe">
+        <option value="">Toutes les classes</option>
+        <option value="6ème">6ème</option>
+        <option value="5ème">5ème</option>
+        <option value="4ème">4ème</option>
+        <option value="3ème">3ème</option>
+      </select>
+      <select class="filter-select" id="filter-statut-inscriptions">
+        <option value="">Tous les statuts</option>
+        <option value="en_attente">En attente</option>
+        <option value="accepte">Accepté</option>
+        <option value="refuse">Refusé</option>
+      </select>
+    </div>
+    <div id="list-inscriptions"></div>
+  </div>
+
+  <div class="tab-panel" id="panel-recrutements">
+    <div class="card" style="margin-bottom:20px; background:#f8fbff; border-color:#d6e6ff;">
+      <h3 style="margin:0 0 6px; font-family:'Fraunces',serif; color:var(--navy-dark);">Candidatures au recrutement (personnel)</h3>
+      <p style="margin:0; color:var(--ink-soft); font-size:.9rem;">Traitez les demandes de recrutement pour intégrer l'équipe (enseignants, personnel d'éducation, direction...).</p>
+    </div>
+    <div class="toolbar">
+      <input type="text" class="search-input" id="search-recrutements" placeholder="Rechercher par nom, prénom ou Discord...">
+      <select class="filter-select" id="filter-statut-recrutements">
+        <option value="">Tous les statuts</option>
+        <option value="en_attente">En attente</option>
+        <option value="accepte">Accepté</option>
+        <option value="refuse">Refusé</option>
+      </select>
+    </div>
+    <div id="list-recrutements"></div>
+  </div>
+
+  <div class="tab-panel" id="panel-personnel">
+    <div class="card" style="margin-bottom:20px; background:#f8fbff; border-color:#d6e6ff;">
+      <h3 style="margin:0 0 6px; font-family:'Fraunces',serif; color:var(--navy-dark);">Gestion des administrateurs</h3>
+      <p style="margin:0; color:var(--ink-soft); font-size:.9rem;">Créez et gérez les comptes administrateurs du site. Les comptes sont conservés (suppression désactivée).</p>
+    </div>
+    <div class="card" style="margin-bottom:24px;">
+      <h3 style="margin-top:0;font-family:'Fraunces',serif;color:var(--navy-dark);">Créer un compte administrateur</h3>
+      <form id="form-create-staff" class="staff-form">
+        <div class="field">
+          <label for="new-username">Email</label>
+          <input type="text" id="new-username" required>
+        </div>
+        <div class="field">
+          <label for="new-password">Mot de passe</label>
+          <input type="password" id="new-password" required>
+        </div>
+        <button type="submit" class="submit" style="margin:0;">Créer</button>
+      </form>
+      <div class="msg ok" id="staff-ok">✓ Compte créé.</div>
+      <div class="msg err" id="staff-err">Erreur lors de la création du compte.</div>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0;font-family:'Fraunces',serif;color:var(--navy-dark);">Comptes administrateurs existants</h3>
+      <ul class="staff-list" id="staff-list"></ul>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="panel-comptes-ecole">
+    <div class="card" style="margin-bottom:20px; background:#f8fbff; border-color:#d6e6ff;">
+      <h3 style="margin:0 0 6px; font-family:'Fraunces',serif; color:var(--navy-dark);">Comptes élèves & personnel</h3>
+      <p style="margin:0; color:var(--ink-soft); font-size:.9rem;">Gérez tous les comptes d'accès (élèves, parents, enseignants, direction...). Tous les comptes existants sont conservés.</p>
+    </div>
+    <div class="card" style="margin-bottom:24px;">
+      <h3 style="margin-top:0;font-family:'Fraunces',serif;color:var(--navy-dark);">Créer un compte élève / personnel</h3>
+      <form id="form-create-ecole" class="staff-form" style="grid-template-columns:1fr 1fr 1fr 1fr auto;">
+        <div class="field">
+          <label for="ecole-prenom">Prénom</label>
+          <input type="text" id="ecole-prenom" required>
+        </div>
+        <div class="field">
+          <label for="ecole-nom">Nom</label>
+          <input type="text" id="ecole-nom" required>
+        </div>
+        <div class="field">
+          <label for="ecole-identifiant">Identifiant</label>
+          <input type="text" id="ecole-identifiant" placeholder="p.nom12" required>
+        </div>
+        <div class="field">
+          <label for="ecole-password">Mot de passe</label>
+          <input type="password" id="ecole-password" required>
+        </div>
+        <button type="submit" class="submit" style="margin:0;">Créer</button>
+      </form>
+      <div class="field" style="margin-top:14px;max-width:260px;">
+        <label for="ecole-profil">Profil</label>
+        <select id="ecole-profil" required>
+          <option value="eleve">Élève</option>
+          <option value="responsable">Responsable d'élève</option>
+          <option value="direction">Personnel de la Direction</option>
+          <option value="education">Personnel d'éducation (CPE, AED)</option>
+          <option value="profs">Personnel enseignant</option>
+          <option value="academie">Académie</option>
+        </select>
+      </div>
+      <div class="msg ok" id="ecole-ok">✓ Compte créé.</div>
+      <div class="msg err" id="ecole-err">Erreur lors de la création du compte.</div>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0;font-family:'Fraunces',serif;color:var(--navy-dark);">Liste des comptes existants</h3>
+      <ul class="staff-list" id="ecole-list"></ul>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="panel-messagerie">
+    <div class="card" style="margin-bottom:20px; background:#f8fbff; border-color:#d6e6ff;">
+      <h3 style="margin:0 0 6px; font-family:'Fraunces',serif; color:var(--navy-dark);">Messagerie & maintenance</h3>
+      <p style="margin:0; color:var(--ink-soft); font-size:.9rem;">Gérez les horaires d'ouverture de la messagerie et mettez des comptes en maintenance si nécessaire.</p>
+    </div>
+    <div class="card" style="margin-bottom:24px;">
+      <h3 style="margin-top:0;font-family:'Fraunces',serif;color:var(--navy-dark);">Horaires d'ouverture de la messagerie</h3>
+      <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:16px;max-width:64ch;">
+        En dehors de cette plage horaire, aucun message ne peut être envoyé par les comptes élèves, profs et direction.
+      </p>
+      <form id="form-horaires" class="staff-form" style="grid-template-columns:1fr 1fr auto;">
+        <div class="field">
+          <label for="h-debut">Heure d'ouverture (0-23h)</label>
+          <input type="number" id="h-debut" min="0" max="23" required>
+        </div>
+        <div class="field">
+          <label for="h-fin">Heure de fermeture (0-23h)</label>
+          <input type="number" id="h-fin" min="0" max="23" required>
+        </div>
+        <button type="submit" class="submit" style="margin:0;">Enregistrer</button>
+      </form>
+      <div class="msg ok" id="horaires-ok">✓ Horaires enregistrés.</div>
+      <div class="msg err" id="horaires-err">Erreur lors de l'enregistrement.</div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0;font-family:'Fraunces',serif;color:var(--navy-dark);">Comptes en maintenance</h3>
+      <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:16px;max-width:68ch;">
+        Un compte en maintenance ne peut plus se connecter tant que la maintenance n'est pas levée. Tous les comptes sont conservés.
+      </p>
+      <ul class="staff-list" id="maintenance-list"></ul>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+let currentProfile = null;
+
+// ---------- Connexion ----------
+const loginScreen = document.getElementById('login-screen');
+const adminScreen = document.getElementById('admin-screen');
+const formLogin = document.getElementById('form-login');
+const loginErr = document.getElementById('login-err');
+
+formLogin.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  loginErr.style.display = 'none';
+  const email = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value;
+
+  const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  if (error) {
+    loginErr.style.display = 'block';
+    return;
+  }
+  await enterAdmin();
+});
+
+document.getElementById('btn-logout').addEventListener('click', async () => {
+  await supabaseClient.auth.signOut();
+  location.reload();
+});
+
+async function enterAdmin() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) return;
+
+  const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
+  currentProfile = profile;
+
+  loginScreen.style.display = 'none';
+  adminScreen.style.display = 'block';
+  document.getElementById('who-label').textContent =
+    `Connecté en tant que ${profile?.username ?? user.email} (${profile?.role ?? '—'})`;
+
+  if (profile?.role === 'superadmin') {
+    document.getElementById('tab-personnel-btn').style.display = 'inline-block';
+    document.getElementById('tab-comptes-ecole-btn').style.display = 'inline-block';
+    document.getElementById('tab-messagerie-btn').style.display = 'inline-block';
+    loadStaffList();
+    loadEcoleAccounts();
+    loadHoraires();
+    loadMaintenanceList();
+    if (window.disableImageProtection) window.disableImageProtection();
+  }
+
+  loadInscriptions();
+  loadRecrutements();
+  setupRealtime();
+}
+
+// ---------- Synchro temps réel entre écrans ----------
+let realtimeChannel = null;
+function setupRealtime() {
+  if (realtimeChannel) return;
+  realtimeChannel = supabaseClient
+    .channel('admin-realtime')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'inscriptions' }, (payload) => {
+      const id = payload.new?.id ?? payload.old?.id;
+      if (isRecentLocalChange('inscriptions', id)) return;
+      loadInscriptions();
+    })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'recrutements' }, (payload) => {
+      const id = payload.new?.id ?? payload.old?.id;
+      if (isRecentLocalChange('recrutements', id)) return;
+      loadRecrutements();
+    })
+    .subscribe();
+}
+
+// Session déjà active au chargement de la page ?
+(async () => {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (session) await enterAdmin();
+})();
+
+// ---------- Onglets ----------
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ---------- Inscriptions ----------
+let allInscriptions = [];
+
+async function loadInscriptions() {
+  const { data, error } = await supabaseClient.from('inscriptions').select('*').order('created_at', { ascending: false });
+  allInscriptions = (!error && data) ? data : [];
+  renderInscriptions();
+}
+
+function renderInscriptions() {
+  const panel = document.getElementById('list-inscriptions');
+  const search = document.getElementById('search-inscriptions').value.trim().toLowerCase();
+  const classeFilter = document.getElementById('filter-classe').value;
+  const statutFilter = document.getElementById('filter-statut-inscriptions').value;
+
+  let list = allInscriptions.filter(d => {
+    const matchSearch = !search ||
+      d.nom.toLowerCase().includes(search) ||
+      d.prenom.toLowerCase().includes(search) ||
+      d.discord_username.toLowerCase().includes(search);
+    const matchClasse = !classeFilter || d.classe === classeFilter;
+    const matchStatut = !statutFilter || d.statut === statutFilter;
+    return matchSearch && matchClasse && matchStatut;
+  });
+
+  if (list.length === 0) {
+    panel.innerHTML = '<div class="empty-state">Aucune demande ne correspond.</div>';
+    return;
+  }
+
+  panel.innerHTML = list.map(d => `
+    <div class="entry-card">
+      <div class="entry-top">
+        <span class="entry-name">${escapeHtml(d.prenom)} ${escapeHtml(d.nom)} <span class="badge">${escapeHtml(d.classe)}</span> ${statutBadge(d.statut)}</span>
+        <span class="entry-date">${formatDate(d.created_at)}</span>
+      </div>
+      <div class="entry-grid">
+        <div><span class="lbl">Discord</span>${escapeHtml(d.discord_username)}</div>
+        <div><span class="lbl">Âge RP</span>${d.age_rp} ans</div>
+        <div><span class="lbl">Qualités</span>${d.qualites.map(escapeHtml).join(', ')}</div>
+        <div><span class="lbl">Défauts</span>${d.defauts.map(escapeHtml).join(', ')}</div>
+      </div>
+      <div class="entry-text"><span class="lbl">Motivations</span>${escapeHtml(d.motivations)}</div>
+      <div class="notes-block">
+        <label class="lbl">Note interne (staff uniquement)</label>
+        <textarea class="note-input" id="note-inscriptions-${d.id}" placeholder="Note interne...">${escapeHtml(d.notes || '')}</textarea>
+        <button class="action-btn note-save" onclick="saveNote('inscriptions', ${d.id}, this)">💾 Enregistrer la note</button>
+      </div>
+      ${actionButtons('inscriptions', d.id, d.statut)}
+    </div>
+  `).join('');
+}
+
+document.getElementById('search-inscriptions').addEventListener('input', renderInscriptions);
+document.getElementById('filter-classe').addEventListener('change', renderInscriptions);
+document.getElementById('filter-statut-inscriptions').addEventListener('change', renderInscriptions);
+
+// ---------- Recrutements ----------
+let allRecrutements = [];
+
+async function loadRecrutements() {
+  const { data, error } = await supabaseClient.from('recrutements').select('*').order('created_at', { ascending: false });
+  allRecrutements = (!error && data) ? data : [];
+  renderRecrutements();
+}
+
+function renderRecrutements() {
+  const panel = document.getElementById('list-recrutements');
+  const search = document.getElementById('search-recrutements').value.trim().toLowerCase();
+  const statutFilter = document.getElementById('filter-statut-recrutements').value;
+
+  let list = allRecrutements.filter(d => {
+    const matchSearch = !search ||
+      d.nom.toLowerCase().includes(search) ||
+      d.prenom.toLowerCase().includes(search) ||
+      d.discord_username.toLowerCase().includes(search);
+    const matchStatut = !statutFilter || d.statut === statutFilter;
+    return matchSearch && matchStatut;
+  });
+
+  if (list.length === 0) {
+    panel.innerHTML = '<div class="empty-state">Aucune candidature ne correspond.</div>';
+    return;
+  }
+
+  panel.innerHTML = list.map(d => `
+    <div class="entry-card">
+      <div class="entry-top">
+        <span class="entry-name">${escapeHtml(d.prenom)} ${escapeHtml(d.nom)} <span class="badge">${escapeHtml(d.role_demande)}</span> ${statutBadge(d.statut)}</span>
+        <span class="entry-date">${formatDate(d.created_at)}</span>
+      </div>
+      <div class="entry-grid">
+        <div><span class="lbl">Discord</span>${escapeHtml(d.discord_username)}</div>
+        <div><span class="lbl">Âge RP</span>${d.age_rp} ans</div>
+        <div><span class="lbl">Dispo. oral</span>${escapeHtml(d.disponibilite_oral)}</div>
+        <div><span class="lbl">Qualités</span>${d.qualites.map(escapeHtml).join(', ')}</div>
+        <div><span class="lbl">Défauts</span>${d.defauts.map(escapeHtml).join(', ')}</div>
+      </div>
+      <div class="entry-text"><span class="lbl">Motivations</span>${escapeHtml(d.motivations)}</div>
+      <div class="notes-block">
+        <label class="lbl">Note interne (staff uniquement)</label>
+        <textarea class="note-input" id="note-recrutements-${d.id}" placeholder="Note interne...">${escapeHtml(d.notes || '')}</textarea>
+        <button class="action-btn note-save" onclick="saveNote('recrutements', ${d.id}, this)">💾 Enregistrer la note</button>
+      </div>
+      ${actionButtons('recrutements', d.id, d.statut)}
+    </div>
+  `).join('');
+}
+
+document.getElementById('search-recrutements').addEventListener('input', renderRecrutements);
+document.getElementById('filter-statut-recrutements').addEventListener('change', renderRecrutements);
+
+// ---------- Statuts / actions communes ----------
+function statutBadge(statut) {
+  const map = {
+    en_attente: '<span class="badge badge-attente">En attente</span>',
+    accepte: '<span class="badge badge-accepte">Accepté</span>',
+    refuse: '<span class="badge badge-refuse">Refusé</span>'
+  };
+  return map[statut] || '';
+}
+
+function actionButtons(table, id, statut) {
+  const acceptBtn = statut !== 'accepte'
+    ? `<button class="action-btn accept" onclick="updateStatut('${table}', ${id}, 'accepte')">✓ Accepter</button>` : '';
+  const refuseBtn = statut !== 'refuse'
+    ? `<button class="action-btn refuse" onclick="updateStatut('${table}', ${id}, 'refuse')">✗ Refuser</button>` : '';
+  const resetBtn = statut !== 'en_attente'
+    ? `<button class="action-btn reset" onclick="updateStatut('${table}', ${id}, 'en_attente')">↺ Remettre en attente</button>` : '';
+  const deleteBtn = `<button class="action-btn delete" onclick="deleteEntry('${table}', ${id})">🗑 Supprimer</button>`;
+  return `<div class="entry-actions">${acceptBtn}${refuseBtn}${resetBtn}${deleteBtn}</div>`;
+}
+
+// ---------- Suivi des changements récents (évite de se re-render soi-même) ----------
+const recentLocalChanges = {};
+function markLocalChange(table, id) {
+  recentLocalChanges[`${table}-${id}`] = Date.now();
+}
+function isRecentLocalChange(table, id) {
+  const t = recentLocalChanges[`${table}-${id}`];
+  return t && (Date.now() - t < 3500);
+}
+
+async function updateStatut(table, id, statut) {
+  await supabaseClient.from(table).update({ statut }).eq('id', id);
+  markLocalChange(table, id);
+  if (table === 'inscriptions') loadInscriptions(); else loadRecrutements();
+}
+
+async function saveNote(table, id, btn) {
+  const value = document.getElementById(`note-${table}-${id}`).value;
+  await supabaseClient.from(table).update({ notes: value }).eq('id', id);
+  markLocalChange(table, id);
+
+  const list = table === 'inscriptions' ? allInscriptions : allRecrutements;
+  const entry = list.find(e => e.id === id);
+  if (entry) entry.notes = value;
+
+  if (btn) {
+    const original = btn.textContent;
+    btn.textContent = '✓ Note ajoutée';
+    btn.classList.add('saved');
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.classList.remove('saved');
+    }, 3000);
+  }
+}
+
+async function deleteEntry(table, id) {
+  if (!confirm('Supprimer définitivement cette candidature ? Cette action est irréversible.')) return;
+  await supabaseClient.from(table).delete().eq('id', id);
+  markLocalChange(table, id);
+  if (table === 'inscriptions') loadInscriptions(); else loadRecrutements();
+}
+
+// ---------- Gestion du personnel (superadmin) ----------
+const ROLE_LABELS = { staff: 'Personnel', superadmin: 'Admin' };
+
+async function loadStaffList() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  const { data } = await supabaseClient.from('profiles').select('*').order('created_at', { ascending: true });
+  const list = document.getElementById('staff-list');
+  if (!data || data.length === 0) {
+    list.innerHTML = '<li>Aucun compte.</li>';
+    return;
+  }
+  list.innerHTML = data.map(p => {
+    const isSelf = p.id === user.id;
+    const otherRole = p.role === 'superadmin' ? 'staff' : 'superadmin';
+    const canManage = !isSelf && !p.is_protected;
+    return `
+      <li>
+        <span>${escapeHtml(p.username)} ${isSelf ? '<span class="badge">toi</span>' : ''} ${p.is_protected ? '<span class="badge">protégé</span>' : ''}</span>
+        <span class="staff-actions">
+          <span class="badge">${ROLE_LABELS[p.role] || p.role}</span>
+          ${canManage ? `<button class="action-btn reset" onclick="changeRole('${p.id}', '${otherRole}')">Passer ${ROLE_LABELS[otherRole]}</button>` : ''}
+          ${canManage ? `<button class="action-btn delete" onclick="deleteStaffDisabled('${p.id}', '${escapeHtml(p.username)}')">🗑 Supprimer</button>` : ''}
+        </span>
+      </li>`;
+  }).join('');
+}
+
+async function changeRole(id, newRole) {
+  await supabaseClient.from('profiles').update({ role: newRole }).eq('id', id);
+  loadStaffList();
+}
+
+async function deleteStaffDisabled(id, username) {
+  if (!confirm(`Supprimer définitivement le compte de ${username} ? Cette action est irréversible.`)) return;
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const res = await fetch(`${SUPABASE_URL}/functions/v1/delete-staff-user`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${session.access_token}`
+    },
+    body: JSON.stringify({ userId: id })
+  });
+  const result = await res.json();
+  if (!res.ok) {
+    alert(result.error || 'Erreur lors de la suppression.');
+    return;
+  }
+  loadStaffList();
+}
+
+document.getElementById('form-create-staff').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const okMsg = document.getElementById('staff-ok');
+  const errMsg = document.getElementById('staff-err');
+  okMsg.style.display = 'none';
+  errMsg.style.display = 'none';
+
+  const username = document.getElementById('new-username').value.trim();
+  const password = document.getElementById('new-password').value;
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+
+  const res = await fetch(`${SUPABASE_URL}/functions/v1/create-staff-user`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${session.access_token}`
+    },
+    body: JSON.stringify({ username, password })
+  });
+  const result = await res.json();
+
+  if (!res.ok) {
+    errMsg.textContent = result.error || 'Erreur lors de la création du compte.';
+    errMsg.style.display = 'block';
+    return;
+  }
+  okMsg.style.display = 'block';
+  document.getElementById('form-create-staff').reset();
+  loadStaffList();
+});
+
+// ---------- Comptes École (élèves / responsables / personnel / académie) ----------
+const PROFIL_LABELS = {
+  eleve: 'Élève',
+  responsable: 'Responsable d\'élève',
+  direction: 'Personnel de la Direction',
+  education: 'Personnel d\'éducation',
+  profs: 'Personnel enseignant',
+  academie: 'Académie'
+};
+
+async function loadEcoleAccounts() {
+  const { data } = await supabaseClient.from('comptes_ecole').select('*').order('created_at', { ascending: true });
+  const list = document.getElementById('ecole-list');
+  if (!data || data.length === 0) {
+    list.innerHTML = '<li>Aucun compte.</li>';
+    return;
+  }
+  list.innerHTML = data.map(c => `
+    <li>
+      <span>${escapeHtml(c.prenom)} ${escapeHtml(c.nom)} <span class="badge">${escapeHtml(c.identifiant)}</span> ${c.maintenance ? '<span class="badge" style="background:#fbeaea;color:var(--error);">maintenance</span>' : ''}</span>
+      <span class="staff-actions">
+        <span class="badge">${PROFIL_LABELS[c.profil] || c.profil}</span>
+        <button class="action-btn reset" onclick="toggleMaintenance('${c.id}')">${c.maintenance ? '✓ Lever la maintenance' : '⚠ Mettre en maintenance'}</button>
+        <button class="action-btn delete" onclick="deleteEcole('${c.id}', '${escapeHtml(c.prenom)} ${escapeHtml(c.nom)}')">🗑 Supprimer</button>
+      </span>
+    </li>`).join('');
+}
+
+document.getElementById('form-create-ecole').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const okMsg = document.getElementById('ecole-ok');
+  const errMsg = document.getElementById('ecole-err');
+  okMsg.style.display = 'none';
+  errMsg.style.display = 'none';
+
+  const payload = {
+    action: 'create',
+    prenom: document.getElementById('ecole-prenom').value.trim(),
+    nom: document.getElementById('ecole-nom').value.trim(),
+    identifiant: document.getElementById('ecole-identifiant').value.trim(),
+    password: document.getElementById('ecole-password').value,
+    profil: document.getElementById('ecole-profil').value
+  };
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const res = await fetch(`${SUPABASE_URL}/functions/v1/manage-ecole-user`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+    body: JSON.stringify(payload)
+  });
+  const result = await res.json();
+
+  if (!res.ok) {
+    errMsg.textContent = result.error || 'Erreur lors de la création du compte.';
+    errMsg.style.display = 'block';
+    return;
+  }
+  okMsg.style.display = 'block';
+  document.getElementById('form-create-ecole').reset();
+  loadEcoleAccounts();
+});
+
+async function deleteEcole(id, name) {
+  if (!confirm(`Supprimer définitivement le compte de ${name} ? Cette action est irréversible.`)) return;
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const res = await fetch(`${SUPABASE_URL}/functions/v1/manage-ecole-user`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+    body: JSON.stringify({ action: 'delete', userId: id })
+  });
+  const result = await res.json();
+  if (!res.ok) {
+    alert(result.error || 'Erreur lors de la suppression.');
+    return;
+  }
+  loadEcoleAccounts();
+  loadMaintenanceList();
+}
+
+// ---------- Horaires de la messagerie (superadmin) ----------
+async function loadHoraires() {
+  const { data } = await supabaseClient.from('settings').select('value').eq('key', 'messagerie_horaires').single();
+  if (data?.value) {
+    document.getElementById('h-debut').value = data.value.debut ?? 7;
+    document.getElementById('h-fin').value = data.value.fin ?? 20;
+  } else {
+    document.getElementById('h-debut').value = 7;
+    document.getElementById('h-fin').value = 20;
+  }
+}
+
+document.getElementById('form-horaires').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const okMsg = document.getElementById('horaires-ok');
+  const errMsg = document.getElementById('horaires-err');
+  okMsg.style.display = 'none';
+  errMsg.style.display = 'none';
+
+  const debut = parseInt(document.getElementById('h-debut').value, 10);
+  const fin = parseInt(document.getElementById('h-fin').value, 10);
+
+  if (isNaN(debut) || isNaN(fin) || debut >= fin) {
+    errMsg.textContent = 'L\'heure de fermeture doit être après l\'heure d\'ouverture.';
+    errMsg.style.display = 'block';
+    return;
+  }
+
+  const { error } = await supabaseClient.from('settings')
+    .update({ value: { debut, fin }, updated_at: new Date().toISOString() })
+    .eq('key', 'messagerie_horaires');
+
+  if (error) {
+    errMsg.textContent = error.message || 'Erreur.';
+    errMsg.style.display = 'block';
+    return;
+  }
+  okMsg.style.display = 'block';
+});
+
+// ---------- Comptes en maintenance (superadmin) ----------
+async function toggleMaintenance(id) {
+  const { data } = await supabaseClient.from('comptes_ecole').select('maintenance').eq('id', id).single();
+  const newValue = !(data?.maintenance);
+  await supabaseClient.from('comptes_ecole').update({ maintenance: newValue }).eq('id', id);
+  loadEcoleAccounts();
+  loadMaintenanceList();
+}
+
+async function loadMaintenanceList() {
+  const list = document.getElementById('maintenance-list');
+  const { data } = await supabaseClient.from('comptes_ecole').select('*').eq('maintenance', true).order('created_at', { ascending: true });
+  if (!data || data.length === 0) {
+    list.innerHTML = '<li style="border:none;color:var(--ink-soft);">Aucun compte en maintenance.</li>';
+    return;
+  }
+  list.innerHTML = data.map(c => `
+    <li>
+      <span>${escapeHtml(c.prenom)} ${escapeHtml(c.nom)} <span class="badge">${escapeHtml(c.identifiant)}</span> <span class="badge">${PROFIL_LABELS[c.profil] || c.profil}</span></span>
+      <span class="staff-actions">
+        <button class="action-btn accept" onclick="toggleMaintenance('${c.id}')">✓ Lever la maintenance</button>
+      </span>
+    </li>`).join('');
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function formatDate(iso) {
+  return new Date(iso).toLocaleString('fr-FR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+}
+</script>
+
+</body>
+</html>

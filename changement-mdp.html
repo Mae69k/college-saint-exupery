@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Changement de mot de passe — Collège Saint-Exupéry</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src="protect.js"></script>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <img src="assets/favicon.png" alt="Collège Saint-Exupéry">
+    <div class="topbar-text">
+      <div class="etab">Collège Saint-Exupéry</div>
+      <div class="sub">EduCollège — premier accès</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap" style="padding-top:32px;">
+  <div class="login-shell" style="margin:0 auto;">
+    <div class="card">
+      <h1 style="font-family:'Fraunces',serif;color:var(--navy-dark);font-size:1.2rem;margin:0 0 8px;">Première connexion</h1>
+      <p style="color:var(--ink-soft);font-size:.88rem;margin-bottom:18px;line-height:1.5;">
+        C'est ta première connexion. Pour sécuriser ton compte, tu dois modifier ton mot de passe avant de continuer.
+      </p>
+      <form id="form-mdp">
+        <div class="field">
+          <label for="mdp1">Nouveau mot de passe</label>
+          <input type="password" id="mdp1" placeholder="Au moins 8 caractères" required>
+        </div>
+        <div class="field">
+          <label for="mdp2">Confirmer le mot de passe</label>
+          <input type="password" id="mdp2" placeholder="Retape ton mot de passe" required>
+        </div>
+        <button type="submit" class="submit" id="btn-mdp">Changer mon mot de passe</button>
+        <div class="msg ok" id="msg-ok">✓ Mot de passe changé avec succès.</div>
+        <div class="msg err" id="msg-err"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="auth-guard.js"></script>
+<script>
+let currentUser = null;
+
+(async () => {
+  const user = await requireAuth();
+  if (!user) return;
+  currentUser = user;
+
+  const { data: compte } = await supabaseClient.from('comptes_ecole').select('first_login').eq('id', user.id).maybeSingle();
+  if (!compte?.first_login) {
+    window.location.href = 'espace.html';
+    return;
+  }
+})();
+
+document.getElementById('form-mdp').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msgOk = document.getElementById('msg-ok');
+  const msgErr = document.getElementById('msg-err');
+  const btn = document.getElementById('btn-mdp');
+  msgOk.style.display = 'none';
+  msgErr.style.display = 'none';
+
+  const mdp1 = document.getElementById('mdp1').value;
+  const mdp2 = document.getElementById('mdp2').value;
+
+  if (mdp1.length < 8) {
+    msgErr.textContent = 'Le mot de passe doit faire au moins 8 caractères.';
+    msgErr.style.display = 'block';
+    return;
+  }
+  if (mdp1 !== mdp2) {
+    msgErr.textContent = 'Les mots de passe ne correspondent pas.';
+    msgErr.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Enregistrement...';
+
+  const { error } = await supabaseClient.auth.updateUser({ password: mdp1 });
+
+  if (error) {
+    btn.disabled = false;
+    btn.textContent = 'Changer mon mot de passe';
+    msgErr.textContent = error.message || 'Une erreur est survenue.';
+    msgErr.style.display = 'block';
+    return;
+  }
+
+  await supabaseClient.from('comptes_ecole').update({ first_login: false }).eq('id', currentUser.id);
+
+  msgOk.style.display = 'block';
+  btn.style.display = 'none';
+  setTimeout(() => { window.location.href = 'espace.html'; }, 1500);
+})();
+</script>
+
+</body>
+</html>

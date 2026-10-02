@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inscription élève — Collège Saint-Exupéry</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src="protect.js"></script>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <img src="assets/favicon.png" alt="Collège Saint-Exupéry">
+    <div class="topbar-text">
+      <div class="etab">Collège Saint-Exupéry</div>
+      <div class="sub">Établissement de rôleplay Discord</div>
+    </div>
+  </div>
+</div>
+
+<div class="hero">
+  <img class="big-logo" src="assets/logo.png" alt="Logo Collège Saint-Exupéry">
+  <div class="hero-copy">
+    <h1>Demande d'inscription élève</h1>
+    <p>Remplis ce formulaire pour demander ton inscription au Collège Saint-Exupéry. Ta demande sera examinée par l'équipe de direction avant validation.</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <a href="index.html" class="back-link">← Retour à l'accueil</a>
+  <div class="card">
+    <form id="form-inscription">
+      <div class="duo">
+        <div class="field">
+          <label for="nom">Nom</label>
+          <input type="text" id="nom" required>
+        </div>
+        <div class="field">
+          <label for="prenom">Prénom</label>
+          <input type="text" id="prenom" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="discord">Nom d'utilisateur Discord</label>
+        <input type="text" id="discord" placeholder="pseudo (pas le pseudo affiché sur le serveur)" required>
+      </div>
+
+      <div class="field">
+        <label for="age">Âge (RP)</label>
+        <input type="number" id="age" min="10" max="18" required>
+      </div>
+
+      <div class="field">
+        <label for="classe">Classe demandée</label>
+        <select id="classe" required>
+          <option value="" disabled selected>Choisis un niveau</option>
+          <option value="6ème">6ème</option>
+          <option value="5ème">5ème</option>
+          <option value="4ème">4ème</option>
+          <option value="3ème">3ème</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="motivations">Motivations</label>
+        <textarea id="motivations" required placeholder="Pourquoi veux-tu rejoindre le Collège Saint-Exupéry ?"></textarea>
+      </div>
+
+      <div class="field">
+        <label>3 qualités</label>
+        <div class="trio">
+          <input type="text" id="qualite1" placeholder="Qualité 1" required>
+          <input type="text" id="qualite2" placeholder="Qualité 2" required>
+          <input type="text" id="qualite3" placeholder="Qualité 3" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>3 défauts</label>
+        <div class="trio">
+          <input type="text" id="defaut1" placeholder="Défaut 1" required>
+          <input type="text" id="defaut2" placeholder="Défaut 2" required>
+          <input type="text" id="defaut3" placeholder="Défaut 3" required>
+        </div>
+      </div>
+
+      <button type="submit" class="submit" id="btn-submit">Envoyer ma demande</button>
+      <div class="msg ok" id="msg-ok">✓ Ta demande a bien été envoyée. L'équipe de direction va l'examiner.</div>
+      <div class="msg err" id="msg-err">Une erreur est survenue. Vérifie ta connexion et réessaie.</div>
+    </form>
+  </div>
+</div>
+
+<footer class="site-footer">Collège Saint-Exupéry — Formulaire d'inscription</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+const form = document.getElementById('form-inscription');
+const btn = document.getElementById('btn-submit');
+const msgOk = document.getElementById('msg-ok');
+const msgErr = document.getElementById('msg-err');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  msgOk.style.display = 'none';
+  msgErr.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Envoi en cours...';
+
+  const payload = {
+    nom: document.getElementById('nom').value.trim(),
+    prenom: document.getElementById('prenom').value.trim(),
+    discord_username: document.getElementById('discord').value.trim(),
+    age_rp: parseInt(document.getElementById('age').value, 10),
+    classe: document.getElementById('classe').value,
+    motivations: document.getElementById('motivations').value.trim(),
+    qualites: [
+      document.getElementById('qualite1').value.trim(),
+      document.getElementById('qualite2').value.trim(),
+      document.getElementById('qualite3').value.trim()
+    ],
+    defauts: [
+      document.getElementById('defaut1').value.trim(),
+      document.getElementById('defaut2').value.trim(),
+      document.getElementById('defaut3').value.trim()
+    ]
+  };
+
+  const { error } = await supabaseClient.from('inscriptions').insert(payload);
+
+  btn.disabled = false;
+  btn.textContent = 'Envoyer ma demande';
+
+  if (error) {
+    console.error(error);
+    msgErr.style.display = 'block';
+  } else {
+    msgOk.style.display = 'block';
+    form.reset();
+  }
+});
+</script>
+
+</body>
+</html>

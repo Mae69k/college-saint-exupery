@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon espace — Collège Saint-Exupéry</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src="protect.js"></script>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <img src="assets/favicon.png" alt="Collège Saint-Exupéry">
+    <div class="topbar-text">
+      <div class="etab">Collège Saint-Exupéry</div>
+      <div class="sub">Espace personnel</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap" style="padding-top:32px;">
+  <a href="index.html" class="back-link">← Retour à l'accueil</a>
+
+  <div id="loading" class="card" style="text-align:center;color:var(--ink-soft);">
+    Chargement de ton espace...
+  </div>
+
+  <div id="espace-content" style="display:none;">
+    <div class="card" style="margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <div>
+        <h1 id="welcome-name" style="font-family:'Fraunces',serif;color:var(--navy-dark);margin:0 0 6px;font-size:1.4rem;"></h1>
+        <span class="badge" id="profil-badge"></span>
+      </div>
+      <button class="logout-btn" id="btn-logout">Se déconnecter</button>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0;font-family:'Fraunces',serif;color:var(--navy-dark);">Bienvenue sur ton espace EduCollège</h3>
+      <p style="color:var(--ink-soft);font-size:.92rem;line-height:1.6;">
+        Cet espace est le tien. Il évoluera avec de nouvelles fonctionnalités selon ton profil
+        (vie scolaire, emploi du temps, messagerie interne...). Reste connecté pour la suite !
+      </p>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <h3 style="margin-top:0;font-family:'Fraunces',serif;color:var(--navy-dark);">Messagerie interne</h3>
+      <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:16px;">Échange des messages avec les profs, les responsables et les élèves du collège.</p>
+      <a href="messagerie.html" class="submit" style="display:inline-block;text-decoration:none;padding:12px 24px;width:auto;">Ouvrir la messagerie</a>
+    </div>
+
+    <div class="card" id="applis-card" style="display:none;margin-top:20px;">
+      <h3 style="margin-top:0;font-family:'Fraunces',serif;color:var(--navy-dark);">Mes outils</h3>
+      <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:16px;">Accède à Pronote, GeoGebra, ton espace documentaire et plus encore.</p>
+      <a href="mes-applis.html" class="submit" style="display:inline-block;text-decoration:none;padding:12px 24px;width:auto;">Ouvrir Mes applis</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="auth-guard.js"></script>
+<script>
+const labels = {
+  eleve: 'Élève',
+  responsable: 'Responsable d\'élève',
+  direction: 'Personnel de la Direction',
+  education: 'Personnel d\'éducation',
+  profs: 'Personnel enseignant',
+  academie: 'Académie'
+};
+
+(async () => {
+  const user = await requireAuth();
+  if (!user) return;
+
+  const { data: compte } = await supabaseClient.from('comptes_ecole').select('*').eq('id', user.id).single();
+
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('espace-content').style.display = 'block';
+  document.getElementById('welcome-name').textContent = compte
+    ? `Bonjour ${compte.prenom} ${compte.nom}`
+    : 'Bonjour';
+  document.getElementById('profil-badge').textContent = compte ? (labels[compte.profil] || compte.profil) : '';
+
+  if (compte?.profil === 'profs') {
+    document.getElementById('applis-card').style.display = 'block';
+  }
+})();
+
+document.getElementById('btn-logout').addEventListener('click', async () => {
+  await supabaseClient.auth.signOut();
+  window.location.href = 'index.html';
+});
+</script>
+
+</body>
+</html>

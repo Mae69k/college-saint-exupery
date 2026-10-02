@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Messagerie — Collège Saint-Exupéry</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="stylesheet" href="style.css">
+<style>
+  .msg-wrap{max-width:980px;margin:0 auto;padding:32px 24px 64px;}
+  .msg-wrap h1{font-family:'Fraunces',serif;color:var(--navy-dark);font-size:1.5rem;margin:0 0 6px;}
+  .msg-sub{color:var(--ink-soft);font-size:.85rem;margin-bottom:22px;}
+  .msg-banner{
+    border-radius:8px;padding:12px 16px;font-size:.88rem;margin-bottom:18px;display:none;
+  }
+  .msg-banner.closed{display:block;background:#fdf4e3;border:1px solid #f2dcae;color:#8a6414;}
+  .msg-banner.open{display:block;background:#e9f7ee;border:1px solid #bfe6cd;color:#1e7a44;}
+  .msg-layout{
+    display:grid;
+    grid-template-columns:280px 1fr;
+    gap:18px;
+    min-height:520px;
+  }
+  @media (max-width:760px){.msg-layout{grid-template-columns:1fr;}}
+  .contacts-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;overflow-y:auto;max-height:600px;}
+  .contacts-card h3{margin:0 0 12px;font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);}
+  .contact{
+    display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;
+    margin-bottom:2px;border:1px solid transparent;justify-content:space-between;
+  }
+  .contact:hover{background:#f2f6fa;}
+  .contact.active{background:#eaf6fd;border-color:#bfe0f2;}
+  .contact .avatar{
+    width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:var(--navy);color:#fff;font-weight:700;font-size:.8rem;flex-shrink:0;
+  }
+  .contact .contact-name{font-weight:600;font-size:.88rem;color:var(--navy-dark);}
+  .contact .contact-profil{font-size:.72rem;color:var(--ink-soft);}
+  .contact .unread{
+    background:var(--gold);color:var(--navy-dark);border-radius:20px;font-size:.68rem;font-weight:700;
+    padding:2px 7px;flex-shrink:0;
+  }
+  .contact .unread.hide{display:none;}
+  .chat-card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    display:flex;flex-direction:column;min-height:520px;
+  }
+  .chat-head{
+    padding:16px 20px;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;gap:12px;
+  }
+  .chat-head .avatar{
+    width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:var(--navy);color:#fff;font-weight:700;flex-shrink:0;
+  }
+  .chat-head .chat-name{font-weight:700;color:var(--navy-dark);}
+  .chat-head .chat-sub{font-size:.75rem;color:var(--ink-soft);}
+  .chat-body{flex:1;padding:20px;overflow-y:auto;background:#fbfcfe;display:flex;flex-direction:column;gap:12px;max-height:440px;}
+  .bubble{
+    max-width:72%;padding:10px 14px;border-radius:12px;font-size:.9rem;line-height:1.45;word-wrap:break-word;
+  }
+  .bubble.me{background:var(--navy);color:#fff;align-self:flex-end;border-bottom-right-radius:4px;}
+  .bubble.them{background:#fff;border:1px solid var(--line);color:var(--ink);align-self:flex-start;border-bottom-left-radius:4px;}
+  .bubble .bubble-time{display:block;font-size:.68rem;opacity:.7;margin-top:5px;}
+  .bubble.them.day{background:#eaf6fd;border-color:#bfe0f2;}
+  .chat-empty{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    color:var(--ink-soft);font-size:.92rem;gap:8px;
+  }
+  .chat-empty .icon{font-size:2.4rem;}
+  .chat-composer{
+    padding:16px 20px;border-top:1px solid var(--line);display:flex;gap:10px;align-items:flex-end;
+  }
+  .chat-composer textarea{
+    flex:1;min-height:44px;max-height:120px;resize:vertical;
+  }
+  .chat-composer button{
+    background:var(--navy);color:#fff;border:none;border-radius:7px;padding:11px 20px;
+    font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;font-size:.9rem;flex-shrink:0;
+  }
+  .chat-composer button:hover{background:var(--navy-dark);}
+  .chat-composer button:disabled{background:#9db4c7;cursor:not-allowed;}
+  .composer-note{font-size:.72rem;color:var(--ink-soft);margin-top:6px;}
+  .search-annuaire{margin-bottom:12px;}
+  .no-contact{color:var(--ink-soft);font-size:.83rem;text-align:center;padding:20px 10px;}
+</style>
+</head>
+<body>
+<script src="protect.js"></script>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <img src="assets/favicon.png" alt="Collège Saint-Exupéry">
+    <div class="topbar-text">
+      <div class="etab">Collège Saint-Exupéry</div>
+      <div class="sub">Messagerie interne</div>
+    </div>
+  </div>
+</div>
+
+<div class="msg-wrap">
+  <a href="espace.html" class="back-link">← Retour à mon espace</a>
+  <h1>Messagerie</h1>
+  <p class="msg-sub" id="msg-who"></p>
+
+  <div class="msg-banner closed" id="banner-closed">
+    ⏰ La messagerie est actuellement fermée. Elle est ouverte de <strong id="closed-hours"></strong>.
+  </div>
+  <div class="msg-banner open" id="banner-open">
+    ✅ La messagerie est ouverte (de <strong id="open-hours"></strong>).
+  </div>
+
+  <div class="msg-layout">
+    <aside class="contacts-card">
+      <h3>Contacts</h3>
+      <input type="text" class="search-input search-annuaire" id="search-contacts" placeholder="Rechercher un contact...">
+      <div id="contacts-list"></div>
+    </aside>
+
+    <section class="chat-card" id="chat-card">
+      <div class="chat-head">
+        <div class="avatar" id="chat-avatar">?</div>
+        <div>
+          <div class="chat-name" id="chat-name">Sélectionne un contact</div>
+          <div class="chat-sub" id="chat-sub"></div>
+        </div>
+      </div>
+
+      <div class="chat-body" id="chat-body">
+        <div class="chat-empty" id="chat-empty">
+          <div class="icon">💬</div>
+          <div>Choisis un contact dans la liste pour discuter.</div>
+        </div>
+      </div>
+
+      <div class="chat-composer">
+        <textarea id="composer" placeholder="Écris ton message ici..." disabled></textarea>
+        <button id="btn-send" disabled>Envoyer</button>
+      </div>
+      <div style="padding:0 20px 16px;" id="composer-note-wrap"></div>
+    </section>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="auth-guard.js"></script>
+<script>
+const PROFIL_LABELS = {
+  eleve: 'Élève',
+  responsable: 'Responsable d\'élève',
+  direction: 'Personnel de la Direction',
+  education: 'Personnel d\'éducation',
+  profs: 'Personnel enseignant',
+  academie: 'Académie'
+};
+
+let me = null;
+let contacts = [];
+let selectedId = null;
+let messages = [];
+let horaires = { debut: 7, fin: 20 };
+let realtimeChannel = null;
+let messagesLoaded = false;
+let unreadCounts = {};
+let updateInterval = null;
+
+const bannerClosed = document.getElementById('banner-closed');
+const bannerOpen = document.getElementById('banner-open');
+
+function isOpen() {
+  const now = new Date();
+  const h = now.getHours() + now.getMinutes() / 60;
+  return h >= horaires.debut && h < horaires.fin;
+}
+
+function renderBanner() {
+  const detail = `${horaires.debut}h à ${horaires.fin}h`;
+  document.getElementById('closed-hours').textContent = detail;
+  document.getElementById('open-hours').textContent = detail;
+  bannerClosed.style.display = isOpen() ? 'none' : 'block';
+  bannerOpen.style.display = isOpen() ? 'block' : 'none';
+}
+
+(async () => {
+  const user = await requireAuth();
+  if (!user) return;
+  me = user;
+
+  const { data: monCompte } = await supabaseClient.from('comptes_ecole').select('*').eq('id', user.id).single();
+  document.getElementById('msg-who').textContent = me && monCompte
+    ? `Bonjour ${monCompte.prenom} — profil ${PROFIL_LABELS[monCompte.profil] || monCompte.profil}.`
+    : '';
+
+  await loadHoraires();
+  await loadContacts();
+  renderBanner();
+  updateInterval = setInterval(renderBanner, 60000);
+
+  document.getElementById('search-contacts').addEventListener('input', renderContacts);
+  document.getElementById('btn-send').addEventListener('click', sendMessage);
+  document.getElementById('composer').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+
+  setTimeout(() => {
+    const chatBody = document.getElementById('chat-body');
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }, 300);
+})();
+
+async function loadHoraires() {
+  const { data } = await supabaseClient.from('settings').select('*').eq('key', 'messagerie_horaires').single();
+  if (data?.value) {
+    horaires.debut = Number(data.value.debut ?? 7);
+    horaires.fin = Number(data.value.fin ?? 20);
+  }
+}
+
+async function loadContacts() {
+  const query = supabaseClient.from('comptes_ecole').select('id, identifiant, nom, prenom, profil').not('id', 'is', null);
+  const { data, error } = await query;
+  if (!error && data) {
+    contacts = data.filter(c => c.id !== me.id).sort((a, b) => (a.prenom + a.nom).localeCompare(b.prenom + b.nom));
+  }
+  loadUnreadCounts().then(() => renderContacts());
+}
+
+async function loadUnreadCounts() {
+  const { data } = await supabaseClient.from('messages')
+    .select('sender_id')
+    .eq('receiver_id', me.id)
+    .eq('read', false);
+  if (data) {
+    unreadCounts = {};
+    data.forEach(m => { unreadCounts[m.sender_id] = (unreadCounts[m.sender_id] || 0) + 1; });
+  }
+}
+
+function fullName(c) {
+  return `${c.prenom} ${c.nom}`;
+}
+
+function initials(c) {
+  return ((c.prenom[0] || '') + (c.nom[0] || '')).toUpperCase();
+}
+
+function renderContacts() {
+  const search = document.getElementById('search-contacts').value.trim().toLowerCase();
+  const list = document.getElementById('contacts-list');
+  const filtered = contacts.filter(c =>
+    fullName(c).toLowerCase().includes(search) ||
+    (c.identifiant || '').toLowerCase().includes(search)
+  );
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="no-contact">Aucun contact trouvé.</div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(c => {
+    const unread = unreadCounts[c.id] || 0;
+    return `
+      <div class="contact ${c.id === selectedId ? 'active' : ''}" onclick="selectContact('${c.id}')">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="avatar">${initials(c)}</div>
+          <div>
+            <div class="contact-name">${escapeHtml(fullName(c))}</div>
+            <div class="contact-profil">${PROFIL_LABELS[c.profil] || c.profil}</div>
+          </div>
+        </div>
+        <span class="unread ${unread === 0 ? 'hide' : ''}">${unread}</span>
+      </div>`;
+  }).join('');
+}
+
+async function selectContact(id) {
+  selectedId = id;
+  renderContacts();
+  const contact = contacts.find(c => c.id === id);
+  if (!contact) return;
+
+  document.getElementById('chat-avatar').textContent = initials(contact);
+  document.getElementById('chat-name').textContent = fullName(contact);
+  document.getElementById('chat-sub').textContent = PROFIL_LABELS[contact.profil] || contact.profil;
+
+  renderComposer();
+  setupRealtime();
+  await loadMessages();
+}
+
+function renderComposer() {
+  const composer = document.getElementById('composer');
+  const btn = document.getElementById('btn-send');
+  const noteWrap = document.getElementById('composer-note-wrap');
+
+  if (!selectedId) {
+    composer.disabled = true;
+    btn.disabled = true;
+    return;
+  }
+  const open = isOpen();
+  composer.disabled = !open;
+  btn.disabled = !open;
+  noteWrap.innerHTML = open
+    ? ''
+    : `<div class="composer-note">⏰ L'envoi est désactivé en dehors des horaires d'ouverture de la messagerie (${horaires.debut}h-${horaires.fin}h).</div>`;
+}
+
+async function loadMessages() {
+  if (!selectedId) return;
+  document.getElementById('chat-empty').style.display = 'none';
+  document.getElementById('chat-body').innerHTML = '<div class="chat-empty"><div>Chargement...</div></div>';
+  messagesLoaded = false;
+
+  const { data, error } = await supabaseClient.from('messages')
+    .select('*')
+    .or(`and(sender_id.eq.${me.id},receiver_id.eq.${selectedId}),and(sender_id.eq.${selectedId},receiver_id.eq.${me.id})`)
+    .order('created_at', { ascending: true });
+
+  messagesLoaded = true;
+  if (error) {
+    document.getElementById('chat-body').innerHTML = '<div class="chat-empty"><div>Erreur de chargement.</div></div>';
+    return;
+  }
+  messages = data || [];
+  renderMessages();
+
+  // Marquage des messages reçus comme lus
+  const unread = messages.filter(m => m.receiver_id === me.id && !m.read);
+  if (unread.length > 0) {
+    await supabaseClient.from('messages')
+      .update({ read: true })
+      .eq('receiver_id', me.id)
+      .in('id', unread.map(m => m.id));
+    unreadCounts[selectedId] = 0;
+    renderContacts();
+  }
+}
+
+function renderMessages() {
+  const body = document.getElementById('chat-body');
+  if (messages.length === 0) {
+    body.innerHTML = '<div class="chat-empty"><div class="icon">💬</div><div>Aucun message pour l\'instant. Commence la conversation !</div></div>';
+    return;
+  }
+  const contact = contacts.find(c => c.id === selectedId);
+  body.innerHTML = messages.map(m => {
+    const mine = m.sender_id === me.id;
+    const sameDayAsNext = false;
+    const cls = mine ? 'bubble me' : 'bubble them';
+    return `
+      <div class="${cls}">
+        ${escapeHtml(m.content)}
+        <span class="bubble-time">${formatDate(m.created_at)}${mine && m.read ? ' · lu' : ''}</span>
+      </div>`;
+  }).join('');
+  body.scrollTop = body.scrollHeight;
+}
+
+async function sendMessage() {
+  if (!selectedId || !isOpen()) return;
+  const composer = document.getElementById('composer');
+  const content = composer.value.trim();
+  if (!content) return;
+
+  composer.value = '';
+  const { error } = await supabaseClient.from('messages').insert({
+    sender_id: me.id,
+    receiver_id: selectedId,
+    content
+  });
+  if (error) {
+    alert('Erreur lors de l\'envoi : ' + error.message);
+    return;
+  }
+  // Du côté expéditeur, ajout immédiat (évite d'attendre le temps réel)
+  messages.push({ id: 'tmp' + Date.now(), sender_id: me.id, receiver_id: selectedId, content, read: false, created_at: new Date().toISOString() });
+  renderMessages();
+}
+
+function setupRealtime() {
+  if (realtimeChannel) return;
+  realtimeChannel = supabaseClient
+    .channel('messagerie-realtime')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `receiver_id=eq.${me.id}` }, (payload) => {
+      const m = payload.new;
+      if (m.sender_id === selectedId) {
+        messages.push(m);
+        renderMessages();
+        supabaseClient.from('messages').update({ read: true }).eq('id', m.id);
+        unreadCounts[m.sender_id] = 0;
+      } else {
+        unreadCounts[m.sender_id] = (unreadCounts[m.sender_id] || 0) + 1;
+      }
+      renderContacts();
+    })
+    .subscribe();
+}
+
+function formatDate(iso) {
+  const d = new Date(iso);
+  const today = new Date();
+  const sameDay = d.toDateString() === today.toDateString();
+  const time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  if (sameDay) return `Aujourd'hui à ${time}`;
+  return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }) + ' · ' + time;
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+</script>
+
+</body>
+</html>

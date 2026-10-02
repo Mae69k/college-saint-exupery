@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connexion — EduCollège</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<script src="protect.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    background:#fff;
+    color:#1a1a1a;
+  }
+  .ec-topline{height:4px;background:#1a56db;}
+  header.ec-head{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:26px 40px;
+  }
+  header.ec-head img{height:44px;}
+  header.ec-head h1{margin:0;font-size:1.4rem;font-weight:700;}
+  .ec-back{
+    display:block;
+    max-width:1000px;
+    margin:0 auto;
+    padding:0 40px;
+    font-size:.85rem;
+    color:#5a6472;
+    text-decoration:none;
+    text-align:right;
+  }
+  main{
+    max-width:1000px;
+    margin:10px auto 0;
+    padding:0 40px 60px;
+    display:flex;
+    gap:40px;
+    flex-wrap:wrap;
+  }
+  .ec-info{flex:1;min-width:240px;padding-top:10px;}
+  .ec-info h2{font-size:1.02rem;margin:0 0 14px;}
+  .ec-info ul{padding-left:18px;margin:0;font-size:.9rem;color:#333;line-height:1.7;}
+  .ec-loginbox{flex:1.4;min-width:320px;}
+  .ec-profil-tag{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:.92rem;
+    color:#333;
+    margin-bottom:14px;
+  }
+  .ec-tab{
+    border-bottom:2px solid #1a56db;
+    color:#1a56db;
+    font-weight:600;
+    font-size:.95rem;
+    padding-bottom:10px;
+    margin-bottom:22px;
+  }
+  .ec-loginbox h3{font-size:1.15rem;margin:0 0 20px;}
+  .field{margin-bottom:20px;}
+  .field label{
+    display:flex;
+    justify-content:space-between;
+    font-size:.88rem;
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  .field input{
+    width:100%;
+    padding:11px 13px;
+    font-size:.95rem;
+    border:1px solid #d5d9e0;
+    border-radius:5px;
+    font-family:'Inter',sans-serif;
+  }
+  .field input:focus{outline:none;border-color:#1a56db;}
+  button.ec-submit{
+    width:100%;
+    background:#1a56db;
+    color:#fff;
+    border:none;
+    padding:13px;
+    font-size:.95rem;
+    font-weight:600;
+    border-radius:5px;
+    cursor:pointer;
+    font-family:'Inter',sans-serif;
+  }
+  button.ec-submit:hover{background:#164bc0;}
+  .ec-msg{
+    margin-top:14px;
+    padding:11px 14px;
+    border-radius:5px;
+    font-size:.85rem;
+    display:none;
+  }
+  .ec-msg.err{background:#fdecea;color:#b3261e;border:1px solid #f4c7c3;}
+  footer.ec-foot{
+    border-top:1px solid #e2e4e8;
+    margin-top:40px;
+    padding:26px 40px;
+    display:flex;
+    align-items:center;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  footer.ec-foot img{height:60px;}
+  footer.ec-foot p{margin:0;font-size:.82rem;color:#4a5568;}
+</style>
+</head>
+<body>
+
+<div class="ec-topline"></div>
+<header class="ec-head">
+  <img src="assets/logo_seul_educ_national.png" alt="Collège Saint-Exupéry">
+  <h1>EduCollège</h1>
+</header>
+<a href="connexion-type.html" class="ec-back">← Changer de profil</a>
+
+<main>
+  <div class="ec-info">
+    <h2>Le compte EduCollège peut donner accès :</h2>
+    <ul>
+      <li>à l'espace numérique de travail (ENT) ;</li>
+      <li>à votre espace personnel du Collège Saint-Exupéry.</li>
+    </ul>
+  </div>
+  <div class="ec-loginbox">
+    <div class="ec-profil-tag" id="profil-tag"></div>
+    <div class="ec-tab">Je me connecte</div>
+    <h3>Je me connecte avec mon compte EduCollège</h3>
+    <form id="form-login">
+      <div class="field">
+        <label>Identifiant</label>
+        <input type="text" id="identifiant" placeholder="Identifiant au format p.nomXX" required>
+      </div>
+      <div class="field">
+        <label>Mot de passe</label>
+        <input type="password" id="password" required>
+      </div>
+      <button type="submit" class="ec-submit" id="btn-login">Se connecter</button>
+      <div class="ec-msg err" id="msg-err">Identifiant ou mot de passe incorrect.</div>
+    </form>
+  </div>
+</main>
+
+<footer class="ec-foot">
+  <img src="assets/logo_educ_national.png" alt="Collège Saint-Exupéry">
+  <p>Un compte unique pour les services numériques du Collège Saint-Exupéry</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+const params = new URLSearchParams(window.location.search);
+const profil = params.get('profil') || 'eleve';
+
+const labels = {
+  eleve: '🎒 Élève',
+  responsable: '🧑‍🤝‍🧑 Responsable d\'élève',
+  direction: '🗄️ Personnel de la Direction',
+  education: '🏫 Personnel d\'éducation',
+  profs: '📋 Personnel enseignant',
+  academie: '🏛️ Académie'
+};
+document.getElementById('profil-tag').textContent = labels[profil] || 'Élève';
+
+const ECOLE_DOMAIN = 'educollege-comptes.local';
+
+document.getElementById('form-login').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const errMsg = document.getElementById('msg-err');
+  const btn = document.getElementById('btn-login');
+  errMsg.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Connexion...';
+
+  const identifiant = document.getElementById('identifiant').value.trim();
+  const password = document.getElementById('password').value;
+  const email = `${identifiant}@${ECOLE_DOMAIN}`;
+
+  const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+  btn.disabled = false;
+  btn.textContent = 'Se connecter';
+
+  if (error) {
+    errMsg.style.display = 'block';
+    return;
+  }
+
+  const { data: { user } } = await supabaseClient.auth.getUser();
+
+  // Si c'est un compte Admin (table profiles) → direction vers l'espace admin
+  const { data: staffProfile } = await supabaseClient.from('profiles').select('role').eq('id', user.id).maybeSingle();
+  if (staffProfile?.role) {
+    window.location.href = 'index.html';
+    return;
+  }
+
+  // Si c'est un compte école en maintenance → connexion refusée
+  const { data: compte } = await supabaseClient.from('comptes_ecole').select('*').eq('id', user.id).maybeSingle();
+  if (compte?.maintenance) {
+    await supabaseClient.auth.signOut();
+    errMsg.textContent = 'Ce compte est actuellement en maintenance. Veuillez réessayer plus tard.';
+    errMsg.style.display = 'block';
+    return;
+  }
+
+  // Premier login → changement de mot de passe obligatoire
+  if (compte?.first_login) {
+    window.location.href = 'changement-mdp.html';
+    return;
+  }
+
+  window.location.href = 'index.html';
+});
+</script>
+
+</body>
+</html>
