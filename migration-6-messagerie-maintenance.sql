@@ -26,17 +26,23 @@ create table if not exists settings (
 alter table settings enable row level security;
 
 -- Tout le monde connecté peut lire les réglages (utile pour la messagerie)
+drop policy if exists "settings: lecture" on settings;
+
 create policy "settings: lecture"
   on settings for select
   to authenticated
   using (true);
 
 -- Seul le superadmin peut modifier les réglages
+drop policy if exists "settings: modification superadmin" on settings;
+
 create policy "settings: modification superadmin"
   on settings for update
   to authenticated
   using (exists (select 1 from profiles p where p.id = auth.uid() and p.role = 'superadmin'))
   with check (true);
+
+drop policy if exists "settings: insertion superadmin" on settings;
 
 create policy "settings: insertion superadmin"
   on settings for insert
@@ -54,12 +60,16 @@ on conflict (key) do nothing;
 
 -- Annuaire : chaque compte connecté peut voir les autres comptes
 -- (id, identifiant, nom, prenom, profil) pour pouvoir envoyer des messages
+drop policy if exists "comptes_ecole: annuaire des connectes" on comptes_ecole;
+
 create policy "comptes_ecole: annuaire des connectes"
   on comptes_ecole for select
   to authenticated
   using (true);
 
 -- Le superadmin peut modifier tout compte école (maintenance, etc.)
+drop policy if exists "comptes_ecole: modification par superadmin" on comptes_ecole;
+
 create policy "comptes_ecole: modification par superadmin"
   on comptes_ecole for update
   to authenticated
@@ -78,18 +88,24 @@ create table if not exists messages (
 alter table messages enable row level security;
 
 -- Un utilisateur peut lire les messages qu'il a envoyés ou reçus
+drop policy if exists "messages: lecture de ses messages" on messages;
+
 create policy "messages: lecture de ses messages"
   on messages for select
   to authenticated
   using (auth.uid() = sender_id or auth.uid() = receiver_id);
 
 -- Un utilisateur peut envoyer un message s'il en est l'émetteur
+drop policy if exists "messages: envoi" on messages;
+
 create policy "messages: envoi"
   on messages for insert
   to authenticated
   with check (auth.uid() = sender_id);
 
 -- Marquer un message comme lu (seul le destinataire)
+drop policy if exists "messages: marquer lu" on messages;
+
 create policy "messages: marquer lu"
   on messages for update
   to authenticated
@@ -97,9 +113,18 @@ create policy "messages: marquer lu"
   with check (auth.uid() = receiver_id);
 
 -- Chacun peut supprimer ses propres messages (reçus ou envoyés)
+drop policy if exists "messages: suppression de ses messages" on messages;
+
 create policy "messages: suppression de ses messages"
   on messages for delete
   to authenticated
   using (auth.uid() = sender_id or auth.uid() = receiver_id);
 
-alter publication supabase_realtime add table messages;
+-- Ajoute la table au temps réel, sans échouer si elle y est déjà
+do $$
+begin
+  alter publication supabase_realtime add table messages;
+exception
+  when duplicate_object then null;
+  when undefined_object then null;
+end $$;

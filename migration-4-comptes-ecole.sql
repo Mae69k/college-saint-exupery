@@ -17,12 +17,16 @@ create table if not exists comptes_ecole (
 alter table comptes_ecole enable row level security;
 
 -- Chacun peut lire son propre compte (pour afficher son espace personnel)
+drop policy if exists "comptes_ecole: lecture de son propre compte" on comptes_ecole;
+
 create policy "comptes_ecole: lecture de son propre compte"
   on comptes_ecole for select
   to authenticated
   using (auth.uid() = id);
 
 -- L'Admin (superadmin) peut lire tous les comptes (pour la gestion dans l'admin)
+drop policy if exists "comptes_ecole: lecture par admin" on comptes_ecole;
+
 create policy "comptes_ecole: lecture par admin"
   on comptes_ecole for select
   to authenticated

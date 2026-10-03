@@ -21,10 +21,13 @@ L'URL du site (Vercel) ne change pas, seul `config.js` pointe vers le nouveau pr
 
 ## Étape 2 — Créer les tables
 
+Tous les fichiers SQL peuvent être réexécutés sans erreur : les tables, colonnes et
+politiques RLS sont créées avec `if not exists` / `drop policy if exists`.
+
 Dans **SQL Editor**, exécute ces fichiers dans cet ordre (un par un, dans l'ordre) :
 
-1. `schema.sql` (les tables de base : inscriptions, recrutements, profiles)
-2. `migration-statuts.sql` (statuts des candidatures)
+1. `schema.sql` (les tables de base : inscriptions, recrutements, profiles — statut et droits de modification inclus)
+2. `migration-statuts.sql` (facultatif : `schema.sql` fait déjà le même travail, on peut le sauter)
 3. `migration-2-notes-personnel.sql` (notes internes, rôles du personnel)
 4. `migration-3-realtime.sql` (synchro en temps réel)
 5. `migration-4-comptes-ecole.sql` ⚠️ remplace `'TON-EMAIL-ADMIN'` en bas du fichier par ton email

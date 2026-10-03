@@ -14,12 +14,16 @@ create table if not exists profiles (
 alter table profiles enable row level security;
 
 -- Un utilisateur connecté peut lire son propre profil (et tous les profils, utile pour la liste du personnel)
+drop policy if exists "profiles: lecture pour les connectés" on profiles;
+
 create policy "profiles: lecture pour les connectés"
   on profiles for select
   to authenticated
   using (true);
 
 -- Seul un superadmin peut modifier un profil (changer un rôle)
+drop policy if exists "profiles: modification par superadmin" on profiles;
+
 create policy "profiles: modification par superadmin"
   on profiles for update
   to authenticated
@@ -47,23 +51,31 @@ create table if not exists inscriptions (
 alter table inscriptions enable row level security;
 
 -- N'importe qui (formulaire public) peut créer une demande
+drop policy if exists "inscriptions: envoi public" on inscriptions;
+
 create policy "inscriptions: envoi public"
   on inscriptions for insert
   to anon
   with check (true);
 
 -- Seuls les comptes connectés (staff) peuvent les lire
+drop policy if exists "inscriptions: lecture staff" on inscriptions;
+
 create policy "inscriptions: lecture staff"
   on inscriptions for select
   to authenticated
   using (true);
 
 -- Le staff connecté peut changer le statut ou supprimer
+drop policy if exists "inscriptions: modification staff" on inscriptions;
+
 create policy "inscriptions: modification staff"
   on inscriptions for update
   to authenticated
   using (true)
   with check (true);
+
+drop policy if exists "inscriptions: suppression staff" on inscriptions;
 
 create policy "inscriptions: suppression staff"
   on inscriptions for delete
@@ -91,21 +103,29 @@ create table if not exists recrutements (
 
 alter table recrutements enable row level security;
 
+drop policy if exists "recrutements: envoi public" on recrutements;
+
 create policy "recrutements: envoi public"
   on recrutements for insert
   to anon
   with check (true);
+
+drop policy if exists "recrutements: lecture staff" on recrutements;
 
 create policy "recrutements: lecture staff"
   on recrutements for select
   to authenticated
   using (true);
 
+drop policy if exists "recrutements: modification staff" on recrutements;
+
 create policy "recrutements: modification staff"
   on recrutements for update
   to authenticated
   using (true)
   with check (true);
+
+drop policy if exists "recrutements: suppression staff" on recrutements;
 
 create policy "recrutements: suppression staff"
   on recrutements for delete

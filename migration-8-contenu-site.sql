@@ -10,6 +10,8 @@
 -- (pages publiques : accueil, actualités, agenda).
 
 -- Lecture publique de la clé contenu_site uniquement
+drop policy if exists "settings: lecture publique du contenu du site" on settings;
+
 create policy "settings: lecture publique du contenu du site"
   on settings for select
   to anon

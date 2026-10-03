@@ -13,6 +13,8 @@ alter table recrutements add column if not exists notes text default '';
 -- sinon exécute aussi migration-statuts.sql avant celle-ci)
 
 -- Autorise un superadmin à modifier un profil (pour changer le rôle d'un compte)
+drop policy if exists "profiles: modification par superadmin" on profiles;
+
 create policy "profiles: modification par superadmin"
   on profiles for update
   to authenticated

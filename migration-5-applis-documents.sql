@@ -8,6 +8,8 @@
 alter table comptes_ecole add column if not exists favoris text[] default '{}';
 
 -- Chacun peut modifier SES PROPRES favoris (et uniquement ça, grâce au with check)
+drop policy if exists "comptes_ecole: modification de son propre compte" on comptes_ecole;
+
 create policy "comptes_ecole: modification de son propre compte"
   on comptes_ecole for update
   to authenticated
@@ -23,6 +25,8 @@ on conflict (id) do nothing;
 
 -- Chacun ne peut voir/ajouter/supprimer que les fichiers dans SON PROPRE dossier
 -- (dossier nommé automatiquement d'après son identifiant utilisateur)
+drop policy if exists "espace_documentaire: acces prive par utilisateur" on storage.objects;
+
 create policy "espace_documentaire: acces prive par utilisateur"
   on storage.objects for all
   to authenticated
