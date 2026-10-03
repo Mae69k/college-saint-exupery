@@ -24,13 +24,23 @@ insert into storage.buckets (id, name, public)
 values ('espace-documentaire', 'espace-documentaire', false)
 on conflict (id) do update set public = false;
 
-drop policy if exists "espace_documentaire: acces prive par utilisateur" on storage.objects;
-
-create policy "esspace_documentaire: acces prive par utilisateur"
-  on storage.objects for all
-  to authenticated
-  using (bucket_id = 'espace-documentaire' and (storage.foldername(name))[1] = auth.uid()::text)
-  with check (bucket_id = 'espace-documentaire' and (storage.foldername(name))[1] = auth.uid()::text);
+-- Politique du bucket : recréée uniquement si elle est absente
+-- (évite l'erreur 42710 "policy already exists").
+do $$
+begin
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'storage'
+      and tablename = 'objects'
+      and policyname = 'espace_documentaire: acces prive par utilisateur'
+  ) then
+    create policy "espace_documentaire: acces prive par utilisateur"
+      on storage.objects for all
+      to authenticated
+      using (bucket_id = 'espace-documentaire' and (storage.foldername(name))[1] = auth.uid()::text)
+      with check (bucket_id = 'espace-documentaire' and (storage.foldername(name))[1] = auth.uid()::text);
+  end if;
+end $$;
 
 
 -- ---------- 3. TOUTES LES POLITIQUES, RECRÉÉES ----------
@@ -246,8 +256,8 @@ end $$;
 
 
 -- ---------- 5. VÉRIFICATION ----------
--- Le bucket "espace-documentaire" doit apparaître,
--- et chaque table doit avoir ses politiques.
+-- Le bucket "espace-documentaire" doit apparaître dans la 2e requête,
+-- et chaque table doit avoir ses politiques dans la 1re.
 
 select tablename, policyname, cmd, roles
 from pg_policies
@@ -255,3 +265,7 @@ where schemaname = 'public'
 order by tablename, policyname;
 
 select id, name, public from storage.buckets order by id;
+
+select policyname, cmd, roles
+from pg_policies
+where schemaname = 'storage' and tablename = 'objects' and policyname like 'espace_documentaire%';
