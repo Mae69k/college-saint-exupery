@@ -30,6 +30,10 @@ jobs:
       - name: Requête au projet
         shell: bash
         run: |
+          if [ "${{ steps.cfg.outputs.key }}" = "A_COLLER_ICI" ]; then
+            echo "::warning::Clé anon absente de config.js : rien à envoyer."
+            exit 0
+          fi
           code_auth=$(curl -s -o /dev/null -w '%{http_code}' -H "apikey: ${{ steps.cfg.outputs.key }}" "${{ steps.cfg.outputs.url }}/auth/v1/health")
           code_rest=$(curl -s -o /dev/null -w '%{http_code}' -H "apikey: ${{ steps.cfg.outputs.key }}" "${{ steps.cfg.outputs.url }}/rest/v1/")
           echo "auth/v1/health : $code_auth"

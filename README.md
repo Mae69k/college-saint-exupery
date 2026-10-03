@@ -182,6 +182,12 @@ Si tu utilises réellement le site, l'activité des visiteurs compte déjà. Une
 
 ---
 
+## Nouveau projet Supabase
+
+Si le projet a changé d'URL (`...supabase.co`), le nouveau projet est vide : suis `INSTALLATION-NOUVEAU-PROJET.md` pour tout réinstaller dans l'ordre (tables, superadmin, comptes école, fonctions serveur). Un projet en pause n'est pas perdu : il se relance jusqu'au 26 octobre 2027.
+
+---
+
 ## Utilisation au quotidien
 
 - **Élèves** → `inscription.html`
