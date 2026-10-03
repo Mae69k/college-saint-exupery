@@ -167,6 +167,21 @@ Sans cette migration, le formulaire fonctionne quand même : si les colonnes man
 
 ---
 
+## Pause du projet Supabase (gratuit)
+
+Un projet Supabase en formule gratuite est **mis en pause après 7 jours sans activité**. Les données ne sont pas perdues : le projet se relance depuis le dashboard (bouton **Resume / Restore project**), et c'est possible jusqu'au 26 octobre 2027.
+
+Pendant une pause, la page du site reste visible mais plus rien ne fonctionne : connexion, formulaires, messagerie, espace admin et contenu du site.
+
+Deux précautions prises :
+
+- `.github/workflows/keep-supabase-active.yml` envoie une requête à Supabase toutes les 72 heures (depuis le dépôt GitHub, sans clé secrète) pour éviter une nouvelle pause. Tu peux le lancer à la main depuis l'onglet **Actions** du dépôt.
+- Les pages publiques restent lisibles même sans base de données : l'accueil, les actualités et l'agenda basculent sur les données d'exemple.
+
+Si tu utilises réellement le site, l'activité des visiteurs compte déjà. Une alternative fiable : passer le projet en formule Pro.
+
+---
+
 ## Utilisation au quotidien
 
 - **Élèves** → `inscription.html`
