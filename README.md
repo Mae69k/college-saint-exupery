@@ -155,6 +155,18 @@ Le contenu est enregistré dans la table `settings` (clé `contenu_site`) et s'a
 
 ---
 
+## Mise à jour — Questions de recrutement + agenda calendrier
+
+**1. Exécute `migration-9-questions-recrutement.sql`** dans **SQL Editor** (une seule fois). Ça ajoute les colonnes qui stockent les 5 réponses détaillées du formulaire de recrutement (compétences, missions, travail en équipe, situation difficile, contraintes).
+
+Sans cette migration, le formulaire fonctionne quand même : si les colonnes manquent, la candidature est enregistrée sans ces 5 réponses et un message le signale à l'élève (aucune candidature n'est jamais perdue).
+
+**2. Formulaire de recrutement** : la question « Disponibilité pour un recrutement à l'oral » (oui/non) est remplacée par une **date obligatoire**. Les 5 réponses s'affichent ensuite dans l'onglet « Recrutements » de `admin.html`.
+
+**3. `agenda.html`** dispose maintenant d'un **v Calendrier mensuel** (mois précédent / suivant / aujourd'hui), les événements apparaissent directement dans les cases du jour. La liste complète reste en dessous de la grille.
+
+---
+
 ## Utilisation au quotidien
 
 - **Élèves** → `inscription.html`

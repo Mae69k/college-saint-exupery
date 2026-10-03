@@ -933,7 +933,7 @@ function renderInscriptions() {
 
         <div><span class="lbl">Discord</span>${escapeHtml(d.discord_username)}</div>
 
-        <div><span class="lbl">Âge RP</span>${d.age_rp} ans</div>
+        <div><span class="lbl">Âge</span>${d.age_rp} ans</div>
 
         <div><span class="lbl">Qualités</span>${d.qualites.map(escapeHtml).join(', ')}</div>
 
@@ -1043,9 +1043,9 @@ function renderRecrutements() {
 
         <div><span class="lbl">Discord</span>${escapeHtml(d.discord_username)}</div>
 
-        <div><span class="lbl">Âge RP</span>${d.age_rp} ans</div>
+        <div><span class="lbl">Âge</span>${d.age_rp} ans</div>
 
-        <div><span class="lbl">Dispo. oral</span>${escapeHtml(d.disponibilite_oral)}</div>
+        <div><span class="lbl">Date oral</span>${escapeHtml(d.disponibilite_oral || '—')}</div>
 
         <div><span class="lbl">Qualités</span>${d.qualites.map(escapeHtml).join(', ')}</div>
 
@@ -1054,6 +1054,16 @@ function renderRecrutements() {
       </div>
 
       <div class="entry-text"><span class="lbl">Motivations</span>${escapeHtml(d.motivations)}</div>
+
+      ${d.competences ? `<div class="entry-text"><span class="lbl">Compétences</span>${escapeHtml(d.competences)}</div>` : ''}
+
+      ${d.missions ? `<div class="entry-text"><span class="lbl">Missions</span>${escapeHtml(d.missions)}</div>` : ''}
+
+      ${d.equipe ? `<div class="entry-text"><span class="lbl">Travail en équipe</span>${escapeHtml(d.equipe)}</div>` : ''}
+
+      ${d.difficile ? `<div class="entry-text"><span class="lbl">Situation difficile</span>${escapeHtml(d.difficile)}</div>` : ''}
+
+      ${d.contraintes ? `<div class="entry-text"><span class="lbl">Contraintes</span>${escapeHtml(d.contraintes)}</div>` : ''}
 
       <div class="notes-block">
 

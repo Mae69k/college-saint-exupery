@@ -82,14 +82,11 @@
  </div>
  </div>
 
- <div class="field">
- <label>Disponibilité pour un recrutement à l'oral <span style="color:#c0392b;">*</span></label>
- <div class="radio-row">
- <label><input type="radio" name="dispo" value="oui" required> Oui</label>
- <label><input type="radio" name="dispo" value="non" required> Non</label>
- 
- </div>
- </div>
+  <div class="field">
+  <label for="dispo_date">Date de disponibilité pour un recrutement à l'oral <span style="color:#c0392b;">*</span></label>
+  <input type="date" id="dispo_date" required>
+  <span class="hint">Choisis la date à laquelle tu serais disponible pour passer l'entretien oral.</span>
+  </div>
 
  
  <div class="field">
@@ -140,39 +137,78 @@ form.addEventListener('submit', async (e) => {
  btn.disabled = true;
  btn.textContent = 'Envoi en cours...';
 
- const payload = {
- nom: document.getElementById('nom').value.trim(),
- prenom: document.getElementById('prenom').value.trim(),
- discord_username: document.getElementById('discord').value.trim(),
- role_demande: document.getElementById('role').value.trim(),
- age_rp: parseInt(document.getElementById('age').value, 10),
- motivations: document.getElementById('motivations').value.trim(),
- qualites: [
- document.getElementById('qualite1').value.trim(),
- document.getElementById('qualite2').value.trim(),
- document.getElementById('qualite3').value.trim()
- ],
- defauts: [
- document.getElementById('defaut1').value.trim(),
- document.getElementById('defaut2').value.trim(),
- document.getElementById('defaut3').value.trim()
- ],
- disponibilite_oral: document.querySelector('input[name=dispo]:checked').value
- };
+  const payload = {
+  nom: document.getElementById('nom').value.trim(),
+  prenom: document.getElementById('prenom').value.trim(),
+  discord_username: document.getElementById('discord').value.trim(),
+  role_demande: document.getElementById('role').value.trim(),
+  age_rp: parseInt(document.getElementById('age').value, 10),
+  motivations: document.getElementById('motivations').value.trim(),
+  qualites: [
+  document.getElementById('qualite1').value.trim(),
+  document.getElementById('qualite2').value.trim(),
+  document.getElementById('qualite3').value.trim()
+  ],
+  defauts: [
+  document.getElementById('defaut1').value.trim(),
+  document.getElementById('defaut2').value.trim(),
+  document.getElementById('defaut3').value.trim()
+  ],
+  disponibilite_oral: document.getElementById('dispo_date').value
+  };
 
- const { error } = await supabaseClient.from('recrutements').insert(payload);
+  // Les cinq réponses métier ne sont envoyées que si les colonnes existent
+  // en base (migration-9). Sinon la candidature est envoyée sans elles,
+  // pour ne jamais perdre une candidature.
+  const questions = {
+  competences: document.getElementById('competences').value.trim(),
+  missions: document.getElementById('missions').value.trim(),
+  equipe: document.getElementById('equipe').value.trim(),
+  difficile: document.getElementById('difficile').value.trim(),
+  contraintes: document.getElementById('contraintes').value.trim()
+  };
 
- btn.disabled = false;
- btn.textContent = 'Envoyer ma candidature';
+  let { error } = await supabaseClient.from('recrutements').insert({ ...payload, ...questions });
 
- if (error) {
- console.error(error);
- msgErr.style.display = 'block';
- } else {
- msgOk.style.display = 'block';
- form.reset();
- }
-});
+  let questionsIgnorees = false;
+
+  if (error) {
+
+  console.error(error);
+
+  const retry = await supabaseClient.from('recrutements').insert(payload);
+
+  if (retry.error) {
+
+  console.error(retry.error);
+
+  }
+
+  error = retry.error;
+
+  questionsIgnorees = true;
+
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Envoyer ma candidature';
+
+  if (error) {
+  msgErr.style.display = 'block';
+  } else {
+  msgOk.style.display = 'block';
+
+  if (questionsIgnorees) {
+
+  msgErr.textContent = 'Candidature envoyée, mais les 5 questions détaillées n\'ont pas pu être enregistrées. Signale-le à l\'administration.';
+
+  msgErr.style.display = 'block';
+
+  }
+
+  form.reset();
+  }
+  });
 </script>
 
 </body>
