@@ -112,6 +112,8 @@
 
 
 
+  <div id="alerte-fonctions" class="msg err" style="display:none;margin:0 0 18px;"></div>
+
   <div class="tabs">
 
     <button class="tab-btn active" data-tab="inscriptions">Inscriptions élèves</button>
@@ -770,6 +772,8 @@ async function enterAdmin() {
     loadMaintenanceList();
 
     loadContenu();
+
+    verifierFonctionsServeur();
 
     if (window.disableImageProtection) window.disableImageProtection();
 
@@ -1458,6 +1462,56 @@ document.getElementById('form-create-ecole').addEventListener('submit', async (e
   loadEcoleAccounts();
 
 });
+
+
+
+// Vérifie que les fonctions serveur sont bien déployées sur le projet.
+// Appel simple (GET, sans en-tête) : le navigateur renvoie un statut lisible,
+// contrairement au POST qui masque un 404 derrière une NetworkError.
+
+async function verifierFonctionsServeur() {
+
+  const alerte = document.getElementById('alerte-fonctions');
+
+  const noms = ['create-staff-user', 'delete-staff-user', 'manage-ecole-user'];
+
+  const absentes = [];
+
+  for (const nom of noms) {
+
+    let disponible = false;
+
+    try {
+
+      const r = await fetch(`${SUPABASE_URL}/functions/v1/${nom}`);
+
+      disponible = r.ok;
+
+    } catch (e) {
+
+      disponible = false;
+
+    }
+
+    if (!disponible) absentes.push(nom);
+
+  }
+
+  if (!absentes.length) {
+
+    alerte.style.display = 'none';
+
+    alerte.textContent = '';
+
+    return;
+
+  }
+
+  alerte.style.display = 'block';
+
+  alerte.innerHTML = `⚠ Création et suppression de comptes indisponibles : la fonction serveur <strong>${absentes.join('</strong>, <strong>')}</strong> n'est pas déployée sur ce projet.<br>Dans un terminal ouvert sur le dossier du projet :<br><code>supabase login</code> puis <code>supabase link --project-ref ${new URL(SUPABASE_URL).hostname.split('.')[0]}</code> puis <code>supabase functions deploy ${absentes[0]}</code> (et les autres).`;
+
+}
 
 
 
