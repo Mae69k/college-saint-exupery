@@ -4,6 +4,6 @@
 // Ne mets JAMAIS la clé "service_role" ici.
 
 const SUPABASE_URL = "https://xfavcidcalkhuceswhxj.supabase.co";
-const SUPABASE_ANON_KEY = "A_COLLER_ICI";
+const SUPABASE_ANON_KEY = "sb_publishable_wvq4w4Vi_Jcs4n4qKJvwgA_q9RrJ0kL";
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
