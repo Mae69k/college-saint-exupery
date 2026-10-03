@@ -363,7 +363,7 @@
 
       <h3 style="margin:0 0 6px; font-family:Arial,serif; color:var(--navy-dark);">Contenu du site</h3>
 
-      <p style="margin:0; color:var(--ink-soft); font-size:.9rem;">Ajoute, modifie ou supprime les annonces, événements, informations importantes et chiffres du collège. Les modifications sont publiées automatiquement sur le site.</p>
+      <p style="margin:0; color:var(--ink-soft); font-size:.9rem;">Ajoute, modifie ou supprime les annonces, événements, informations importantes et chiffres du collège. Les modifications sont publiées automatiquement sur le site. Pour supprimer : clique sur « Supprimer », puis sur « Confirmer ? ».</p>
 
       <div class="msg ok" id="contenu-ok" style="margin-top:14px;">Contenu publié sur le site.</div>
 
@@ -583,7 +583,7 @@
 
         <button type="button" class="action-btn reset" onclick="document.getElementById('import-contenu').click()">Importer (JSON)</button>
 
-        <button type="button" class="action-btn delete" onclick="reinitialiserContenu()">Rétablir les exemples</button>
+        <button type="button" class="action-btn delete" onclick="reinitialiserContenu(this)">Rétablir les exemples</button>
 
         <input type="file" id="import-contenu" accept="application/json" style="display:none;">
 
@@ -1125,7 +1125,7 @@ function actionButtons(table, id, statut) {
 
     ? `<button class="action-btn reset" onclick="updateStatut('${table}', ${id}, 'en_attente')">↺ Remettre en attente</button>` : '';
 
-  const deleteBtn = `<button class="action-btn delete" onclick="deleteEntry('${table}', ${id})">🗑 Supprimer</button>`;
+  const deleteBtn = `<button type="button" class="action-btn delete" onclick="deleteEntry('${table}', ${id}, this)">🗑 Supprimer</button>`;
 
   return `<div class="entry-actions">${acceptBtn}${refuseBtn}${resetBtn}${deleteBtn}</div>`;
 
@@ -1205,15 +1205,19 @@ async function saveNote(table, id, btn) {
 
 
 
-async function deleteEntry(table, id) {
+async function deleteEntry(table, id, bouton) {
 
-  if (!confirm('Supprimer définitivement cette candidature ? Cette action est irréversible.')) return;
+  confirmerEnPlace(bouton, `candidature:${table}:${id}`, async () => {
 
-  await supabaseClient.from(table).delete().eq('id', id);
+    const { error } = await supabaseClient.from(table).delete().eq('id', id);
 
-  markLocalChange(table, id);
+    if (error) { alert('Suppression impossible : ' + error.message); return; }
 
-  if (table === 'inscriptions') loadInscriptions(); else loadRecrutements();
+    markLocalChange(table, id);
+
+    if (table === 'inscriptions') loadInscriptions(); else loadRecrutements();
+
+  }, 'Suppression annulée.');
 
 }
 
@@ -1261,7 +1265,7 @@ async function loadStaffList() {
 
           ${canManage ? `<button class="action-btn reset" onclick="changeRole('${p.id}', '${otherRole}')">Passer ${ROLE_LABELS[otherRole]}</button>` : ''}
 
-          ${canManage ? `<button class="action-btn delete" onclick="deleteStaffDisabled('${p.id}', '${escapeHtml(p.username)}')">🗑 Supprimer</button>` : ''}
+          ${canManage ? `<button type="button" class="action-btn delete" onclick="deleteStaffDisabled('${p.id}', '${escapeHtml(p.username)}', this)">🗑 Supprimer</button>` : ''}
 
         </span>
 
@@ -1283,11 +1287,9 @@ async function changeRole(id, newRole) {
 
 
 
-async function deleteStaffDisabled(id, username) {
+async function deleteStaffDisabled(id, username, bouton) {
 
-  if (!confirm(`Supprimer définitivement le compte de ${username} ? Cette action est irréversible.`)) return;
-
-
+  confirmerEnPlace(bouton, `staff:${id}`, async () => {
 
   const { data: { session } } = await supabaseClient.auth.getSession();
 
@@ -1318,6 +1320,8 @@ async function deleteStaffDisabled(id, username) {
   }
 
   loadStaffList();
+
+  }, `Suppression du compte de ${username} annulée.`);
 
 }
 
@@ -1433,7 +1437,7 @@ async function loadEcoleAccounts() {
 
         <button class="action-btn reset" onclick="toggleMaintenance('${c.id}')">${c.maintenance ? '✓ Lever la maintenance' : '⚠ Mettre en maintenance'}</button>
 
-        <button class="action-btn delete" onclick="deleteEcole('${c.id}', '${escapeHtml(c.prenom)} ${escapeHtml(c.nom)}')">🗑 Supprimer</button>
+        <button type="button" class="action-btn delete" onclick="deleteEcole('${c.id}', '${escapeHtml(c.prenom)} ${escapeHtml(c.nom)}', this)">🗑 Supprimer</button>
 
       </span>
 
@@ -1511,11 +1515,9 @@ document.getElementById('form-create-ecole').addEventListener('submit', async (e
 
 
 
-async function deleteEcole(id, name) {
+async function deleteEcole(id, name, bouton) {
 
-  if (!confirm(`Supprimer définitivement le compte de ${name} ? Cette action est irréversible.`)) return;
-
-
+  confirmerEnPlace(bouton, `ecole:${id}`, async () => {
 
   const { data: { session } } = await supabaseClient.auth.getSession();
 
@@ -1542,6 +1544,8 @@ async function deleteEcole(id, name) {
   loadEcoleAccounts();
 
   loadMaintenanceList();
+
+  }, `Suppression du compte de ${name} annulée.`);
 
 }
 
@@ -1758,13 +1762,21 @@ function renderListe(type) {
 
       <span class="staff-actions">
 
-        <button class="action-btn reset" onclick="modifierContenu('${type}', ${i})">Modifier</button>
+        <button type="button" class="action-btn reset" onclick="modifierContenu('${type}', ${i})">Modifier</button>
 
-        <button class="action-btn delete" onclick="supprimerContenu('${type}', ${i})">Supprimer</button>
+        <button type="button" class="action-btn delete" onclick="supprimerContenu('${type}', ${i}, this)">Supprimer</button>
 
       </span>
 
     </li>`).join('');
+
+}
+
+
+
+function renderListes() {
+
+  Object.keys(CONTENU_SECTIONS).forEach(renderListe);
 
 }
 
@@ -1836,23 +1848,110 @@ function modifierContenu(type, index) {
 
 
 
-function supprimerContenu(type, index) {
+// Suppression en deux clics, sans fenêtre de confirmation du navigateur
+// (la fenêtre native est parfois bloquée et donne l'impression que rien ne se passe).
 
-  const config = CONTENU_SECTIONS[type];
+let confirmationEnAttente = null;
 
-  const item = contenuState[type][index];
+let confirmationTimer = null;
 
-  if (!item) return;
 
-  if (!confirm(`Supprimer « ${item.titre || 'cet élément'} » ?`)) return;
 
-  contenuState[type].splice(index, 1);
+function reinitBouton(bouton) {
 
-  if (editionCourante[type] === index) viderFormulaire(type);
+  if (!bouton) return;
 
-  renderListe(type);
+  bouton.textContent = bouton.dataset.label || 'Supprimer';
 
-  enregistrerContenu();
+  bouton.classList.remove('suppression-attente');
+
+}
+
+
+
+function confirmerEnPlace(bouton, cle, action, messageAnnulation) {
+
+  if (!bouton) { action(); return; }
+
+  if (confirmationEnAttente !== cle) {
+
+    clearTimeout(confirmationTimer);
+
+    confirmationEnAttente = cle;
+
+    if (!bouton.dataset.label) bouton.dataset.label = bouton.textContent;
+
+    bouton.textContent = 'Confirmer ?';
+
+    bouton.classList.add('suppression-attente');
+
+    confirmationTimer = setTimeout(() => {
+
+      confirmationEnAttente = null;
+
+      reinitBouton(bouton);
+
+      renderListes();
+
+      if (messageAnnulation) alert(messageAnnulation);
+
+    }, 6000);
+
+    return;
+
+  }
+
+  clearTimeout(confirmationTimer);
+
+  confirmationEnAttente = null;
+
+  reinitBouton(bouton);
+
+  renderListes();
+
+  action();
+
+}
+
+
+
+function supprimerContenu(type, index, bouton) {
+
+  const item = contenuState[type] ? contenuState[type][index] : null;
+
+  if (!item) {
+
+    majInfoContenu('Élément introuvable : recharge la page.');
+
+    return;
+
+  }
+
+  confirmerEnPlace(bouton, `supprimer:${type}:${index}`, () => {
+
+    try {
+
+      contenuState[type].splice(index, 1);
+
+      if (editionCourante[type] === index) viderFormulaire(type);
+
+      renderListes();
+
+      enregistrerContenu();
+
+    } catch (e) {
+
+      console.error(e);
+
+      const err = document.getElementById('contenu-err');
+
+      err.textContent = 'Suppression impossible : ' + e.message;
+
+      err.style.display = 'block';
+
+    }
+
+  });
 
 }
 
@@ -2006,15 +2105,17 @@ function normaliserContenuAdmin(data) {
 
 
 
-function reinitialiserContenu() {
+function reinitialiserContenu(bouton) {
 
-  if (!confirm('Rétablir les données d\'exemple ? Les contenus actuels seront remplacés.')) return;
+  confirmerEnPlace(bouton, 'reinitialiser', () => {
 
-  contenuState = normaliserContenuAdmin(window.CONTENU_DEFAUT);
+    contenuState = normaliserContenuAdmin(window.CONTENU_DEFAUT);
 
-  afficherContenu();
+    afficherContenu();
 
-  enregistrerContenu();
+    enregistrerContenu();
+
+  });
 
 }
 

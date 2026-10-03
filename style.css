@@ -301,6 +301,8 @@ footer.site-footer{
 .action-btn.reset:hover{background:#f2f4f6;}
 .action-btn.delete{border-color:#f2c4c1;color:var(--error);margin-left:auto;}
 .action-btn.delete:hover{background:var(--error);color:#fff;}
+.action-btn.suppression-attente{background:var(--error);color:#fff;border-color:var(--error);opacity:1;}
+.action-btn.suppression-attente:hover{background:var(--error);color:#fff;}
 
 .notes-block{
   margin-top:14px;
