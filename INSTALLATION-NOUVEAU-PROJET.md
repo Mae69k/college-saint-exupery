@@ -36,6 +36,7 @@ Dans **SQL Editor**, exécute ces fichiers dans cet ordre (un par un, dans l'ord
 8. `migration-7-personnel-education.sql` (profils du personnel)
 9. `migration-8-contenu-site.sql` (contenu modifiable depuis l'espace admin)
 10. `migration-9-questions-recrutement.sql` (5 questions de recrutement + date)
+11. `migration-10-proteger-admin.sql` (colonne `is_protected` : les comptes Admin ne sont plus supprimables depuis l'interface)
 
 ## Étape 3 — Recréer ton compte superadmin
 
@@ -55,15 +56,22 @@ Ils ne sont pas récupérés automatiquement. Refais-les depuis
 Si tu veux repartir de l'ancien projet, tu peux d'abord le relancer
 (Projects → ancien projet → Resume) puis exporter les données.
 
-## Étape 5 — Redéployer les deux fonctions serveur
+## Étape 5 — Déployer les trois fonctions serveur
+
+Sans elles, la création et la suppression de comptes (élèves, personnel, admin)
+sont impossibles. Un bandeau rouge le signale en haut de `admin.html`.
 
 ```bash
 npm install -g supabase
 supabase login
 supabase link --project-ref xfavcidcalkhuceswhxj
-supabase functions deploy manage-ecole-user
+supabase functions deploy create-staff-user
 supabase functions deploy delete-staff-user
+supabase functions deploy manage-ecole-user
 ```
+
+`supabase login` ouvre une page web pour s'authentifier : c'est la seule étape
+qui ne peut pas être faite automatiquement.
 
 ## Étape 6 — Vérifier
 
