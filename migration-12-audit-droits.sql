@@ -184,6 +184,9 @@ create policy "settings: lecture publique du contenu"
   to anon
   using (key = 'contenu_site');
 
+-- Ancienne politique de migration-8, désormais remplacée (évite un doublon).
+drop policy if exists "settings: lecture publique du contenu du site" on settings;
+
 drop policy if exists "settings: insertion superadmin" on settings;
 
 create policy "settings: insertion superadmin"
