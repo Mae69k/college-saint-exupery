@@ -1,0 +1,40 @@
+name: Keep Supabase active
+
+# Un projet Supabase gratuit est mis en pause après 7 jours sans activité.
+# Ce workflow envoie une requête toutes les 72 heures pour éviter la pause.
+# Il lit l'URL et la clé anon publique directement dans config.js :
+# aucune clé secrète n'est nécessaire.
+
+on:
+  schedule:
+    - cron: '17 6 */3 * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    name: Ping Supabase
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Lire la configuration Supabase
+        id: cfg
+        shell: bash
+        run: |
+          url=$(python3 -c "import re;print(re.search(r'SUPABASE_URL = \"([^\"]+)\"', open('config.js', encoding='utf-8').read()).group(1))")
+          key=$(python3 -c "import re;print(re.search(r'SUPABASE_ANON_KEY = \"([^\"]+)\"', open('config.js', encoding='utf-8').read()).group(1))")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "key=$key" >> "$GITHUB_OUTPUT"
+
+      - name: Requête au projet
+        shell: bash
+        run: |
+          code_auth=$(curl -s -o /dev/null -w '%{http_code}' -H "apikey: ${{ steps.cfg.outputs.key }}" "${{ steps.cfg.outputs.url }}/auth/v1/health")
+          code_rest=$(curl -s -o /dev/null -w '%{http_code}' -H "apikey: ${{ steps.cfg.outputs.key }}" "${{ steps.cfg.outputs.url }}/rest/v1/")
+          echo "auth/v1/health : $code_auth"
+          echo "rest/v1/       : $code_rest"
+          if [ "$code_auth" != "200" ]; then
+            echo "Le projet Supabase ne répond pas : il est peut-être en pause."
+            exit 1
+          fi
