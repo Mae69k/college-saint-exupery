@@ -37,6 +37,8 @@ Dans **SQL Editor**, exécute ces fichiers dans cet ordre (un par un, dans l'ord
 9. `migration-8-contenu-site.sql` (contenu modifiable depuis l'espace admin)
 10. `migration-9-questions-recrutement.sql` (5 questions de recrutement + date)
 11. `migration-10-proteger-admin.sql` (colonne `is_protected` : les comptes Admin ne sont plus supprimables depuis l'interface)
+12. `migration-11-politiques-envoi-public.sql` (droits d'envoi des formulaires publics)
+13. `migration-12-audit-droits.sql` ⭐ **à exécuter en dernier** : audit + recrée toutes les politiques RLS, le bucket de l'espace documentaire et le temps réel. Si un script s'est interrompu sur une erreur, c'est ce fichier qui remet tout droit.
 
 ## Étape 3 — Recréer ton compte superadmin
 
