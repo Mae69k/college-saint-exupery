@@ -1291,29 +1291,11 @@ async function deleteStaffDisabled(id, username, bouton) {
 
   confirmerEnPlace(bouton, `staff:${id}`, async () => {
 
-  const { data: { session } } = await supabaseClient.auth.getSession();
+  const r = await appelFonction('delete-staff-user', { userId: id });
 
-  const res = await fetch(`${SUPABASE_URL}/functions/v1/delete-staff-user`, {
+  if (!r.ok) {
 
-    method: 'POST',
-
-    headers: {
-
-      'Content-Type': 'application/json',
-
-      'Authorization': `Bearer ${session.access_token}`
-
-    },
-
-    body: JSON.stringify({ userId: id })
-
-  });
-
-  const result = await res.json();
-
-  if (!res.ok) {
-
-    alert(result.error || 'Erreur lors de la suppression.');
+    alert(r.error);
 
     return;
 
@@ -1347,33 +1329,11 @@ document.getElementById('form-create-staff').addEventListener('submit', async (e
 
 
 
-  const { data: { session } } = await supabaseClient.auth.getSession();
+  const r = await appelFonction('create-staff-user', { username, password });
 
+  if (!r.ok) {
 
-
-  const res = await fetch(`${SUPABASE_URL}/functions/v1/create-staff-user`, {
-
-    method: 'POST',
-
-    headers: {
-
-      'Content-Type': 'application/json',
-
-      'Authorization': `Bearer ${session.access_token}`
-
-    },
-
-    body: JSON.stringify({ username, password })
-
-  });
-
-  const result = await res.json();
-
-
-
-  if (!res.ok) {
-
-    errMsg.textContent = result.error || 'Erreur lors de la création du compte.';
+    errMsg.textContent = r.error;
 
     errMsg.style.display = 'block';
 
@@ -1479,25 +1439,11 @@ document.getElementById('form-create-ecole').addEventListener('submit', async (e
 
 
 
-  const { data: { session } } = await supabaseClient.auth.getSession();
+  const r = await appelFonction('manage-ecole-user', payload);
 
-  const res = await fetch(`${SUPABASE_URL}/functions/v1/manage-ecole-user`, {
+  if (!r.ok) {
 
-    method: 'POST',
-
-    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
-
-    body: JSON.stringify(payload)
-
-  });
-
-  const result = await res.json();
-
-
-
-  if (!res.ok) {
-
-    errMsg.textContent = result.error || 'Erreur lors de la création du compte.';
+    errMsg.textContent = r.error;
 
     errMsg.style.display = 'block';
 
@@ -1515,27 +1461,65 @@ document.getElementById('form-create-ecole').addEventListener('submit', async (e
 
 
 
+// Appel d'une fonction serveur Supabase (comptes école / personnel).
+
+async function appelFonction(nom, payload) {
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+
+  if (!session) return { ok: false, error: 'Session expirée : reconnecte-toi.' };
+
+  let res;
+
+  try {
+
+    res = await fetch(`${SUPABASE_URL}/functions/v1/${nom}`, {
+
+      method: 'POST',
+
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+
+      body: JSON.stringify(payload)
+
+    });
+
+  } catch (e) {
+
+    return { ok: false, error: 'Connexion impossible : ' + e.message };
+
+  }
+
+  const result = await res.json().catch(() => ({}));
+
+  if (res.ok) return { ok: true, data: result };
+
+  let message = result.error || result.message;
+
+  if (!message) {
+
+    message = res.status === 404
+
+      ? `La fonction serveur « ${nom} » n'est pas déployée sur ce projet. Déploie-la avec : supabase functions deploy ${nom}`
+
+      : `Erreur ${res.status} lors de l'appel à ${nom}.`;
+
+  }
+
+  return { ok: false, status: res.status, error: message };
+
+}
+
+
+
 async function deleteEcole(id, name, bouton) {
 
   confirmerEnPlace(bouton, `ecole:${id}`, async () => {
 
-  const { data: { session } } = await supabaseClient.auth.getSession();
+  const r = await appelFonction('manage-ecole-user', { action: 'delete', userId: id });
 
-  const res = await fetch(`${SUPABASE_URL}/functions/v1/manage-ecole-user`, {
+  if (!r.ok) {
 
-    method: 'POST',
-
-    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
-
-    body: JSON.stringify({ action: 'delete', userId: id })
-
-  });
-
-  const result = await res.json();
-
-  if (!res.ok) {
-
-    alert(result.error || 'Erreur lors de la suppression.');
+    alert(r.error);
 
     return;
 
@@ -1963,15 +1947,13 @@ function lireFormulaire(type) {
 
   const item = {};
 
-  Object.entries(config.champs).forEach(([cle, id]) => { item[cle] = document.getElementById(id).value.trim(); });
+  Object.entries(config.champs).forEach(([cle, id]) => {
 
-  if (!item.titre) {
+    const el = document.getElementById(id);
 
-    alert('Merci de renseigner un titre.');
+    item[cle] = el ? el.value.trim() : '';
 
-    return null;
-
-  }
+  });
 
   return item;
 
@@ -1979,11 +1961,79 @@ function lireFormulaire(type) {
 
 
 
+function afficherErreur(message) {
+
+  const ok = document.getElementById('contenu-ok');
+
+  const err = document.getElementById('contenu-err');
+
+  ok.style.display = 'none';
+
+  err.textContent = message;
+
+  err.style.display = 'block';
+
+}
+
+
+
+// Récupère les formulaires encore remplis pour ne jamais perdre une saisie.
+
+function collecterFormulaires(exclusion) {
+
+  let nombre = 0;
+
+  Object.keys(CONTENU_SECTIONS).forEach(type => {
+
+    if (type === exclusion) return;
+
+    const item = lireFormulaire(type);
+
+    if (!item.titre) return;
+
+    const index = editionCourante[type];
+
+    if (index === null) {
+
+      contenuState[type].unshift(item);
+
+    } else {
+
+      contenuState[type][index] = item;
+
+    }
+
+    editionCourante[type] = null;
+
+    nombre++;
+
+  });
+
+  return nombre;
+
+}
+
+
+
 function ajouterOuModifier(type) {
+
+  const config = CONTENU_SECTIONS[type];
 
   const item = lireFormulaire(type);
 
-  if (!item) return;
+  if (!item.titre) {
+
+    afficherErreur('Renseigne le titre avant de publier (le texte seul ne suffit pas).');
+
+    const champ = document.getElementById(config.champs.titre);
+
+    if (champ) champ.focus();
+
+    return;
+
+  }
+
+  collecterFormulaires(type);
 
   const index = editionCourante[type];
 
@@ -1997,9 +2047,9 @@ function ajouterOuModifier(type) {
 
   }
 
-  viderFormulaire(type);
+  editionCourante[type] = null;
 
-  renderListe(type);
+  afficherContenu();
 
   enregistrerContenu();
 
@@ -2013,15 +2063,33 @@ async function enregistrerContenu() {
 
   const err = document.getElementById('contenu-err');
 
-  const res = await window.sauverContenu(contenuState);
+  // Publie aussi les formulaires restés remplis (bouton « Enregistrer tout »).
 
-  if (res.ok) {
+  if (collecterFormulaires()) afficherContenu();
+
+  let res;
+
+  try {
+
+    res = await window.sauverContenu(contenuState);
+
+  } catch (e) {
+
+    console.error(e);
+
+    afficherErreur('Enregistrement impossible : ' + e.message);
+
+    return;
+
+  }
+
+  if (res && res.ok) {
 
     err.style.display = 'none';
 
     ok.style.display = 'block';
 
-    ok.textContent = '✓ ' + res.message;
+    ok.textContent = '✓ ' + res.message + ' (' + new Date().toLocaleTimeString('fr-FR') + ')';
 
   } else {
 
@@ -2029,11 +2097,11 @@ async function enregistrerContenu() {
 
     err.style.display = 'block';
 
-    err.textContent = res.message;
+    err.textContent = (res && res.message) ? res.message : 'Enregistrement impossible.';
 
   }
 
-  majInfoContenu(res.message + ' Dernière action : ' + new Date().toLocaleString('fr-FR'));
+  majInfoContenu((res && res.message ? res.message : '') + ' Dernière action : ' + new Date().toLocaleString('fr-FR'));
 
 }
 
